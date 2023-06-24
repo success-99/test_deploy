@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <style media="screen">
+    .jumbotron {
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
+
+    .jumbotron h1 {
+      text-align: center;
+    }
+
+    .alert {
+      margin: 0px;
+    }
+  </style>
+
+  <title></title>
+</head>
+
+<body>
+
+  {% include "quiz/navbar.html" %}
+  <br><br>
+  <center>
+    <h3 class='alert alert-success' style="margin-bottom:0px;">Biz haqimizda !</h3>
+  </center>
+  <div class="jumbotron" style="margin-bottom: 0px;margin-top: 0px;">
+    
+    <p class="lead">Biz talabalarga savollar bilan shug'ullanishlari uchun platformani taqdim etamiz <br> O'qituvchi tizimda fan va ushbu fanga test savollar qo'shishi mumkin.</p>
+    <hr class="my-4">
+    <p>Veb-saytimizni o'rganing.</p>
+    <p class="lead">
+      <a class="btn btn-primary btn-lg" href="/" role="button">Bosh sahifa</a>
+    </p>
+  </div>
+
+  {% include "quiz/footer.html" %}
+</body>
+
+</html>

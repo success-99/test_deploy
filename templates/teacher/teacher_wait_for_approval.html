@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+{% load widget_tweaks %}
+
+
+  <style media="screen">
+    .jumbotron {
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
+
+    .jumbotron h1 {
+      text-align: center;
+    }
+
+    .alert {
+      margin: 0px;
+    }
+  </style>
+  <body>
+    {% include "quiz/navbar.html" %}
+
+      <div class="jumbotron" style="margin-top: 0px;
+        margin-bottom: 0px;">
+        <h1 class="display-4">Salom {{request.user.first_name}}</h1>
+        <p class="lead">Hisobingiz hozircha tasdiqlanmagan. <br><br>Bizning jamoa hosobingizni tekshirmoqda. <br><br> Tez orada hisobingiz tasdiqlanadi.</p>
+        <hr class="my-4">
+        <p>Keyinroq tekshiring</p>
+        <p class="lead">
+          <a class="btn btn-primary btn-lg" href="/logout" role="button">Hozircha tizimdan chiqish</a>
+        </p>
+      </div>
+
+{% include "quiz/footer.html" %}
+  </body>
+</html>
