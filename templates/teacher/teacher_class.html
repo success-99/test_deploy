@@ -73,26 +73,17 @@
 
   <div class="container">
     <div class="row">
-<!--      <div class="col-md-4 col-xl-6">-->
-<!--        <div class="card bg-c-blue order-card">-->
-<!--          <div class="card-block">-->
-<!--            <h6 class="m-b-20"> <a href="admin-view-student" style="text-decoration: none;color:white;">Total Student</a> </h6>-->
-<!--            <h2 class="text-right"><i class="fas fa-user-graduate f-left"></i><span>{{total_student}}</span></h2>-->
-<!--            -->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-  
-      <div class="col-md-4 col-xl-6">
-        <div class="card bg-c-green order-card">
+    {% for c in classes%}
+      <div class="col-md-4 col-xl-9">
+        <div class="card bg-c-blue order-card">
           <div class="card-block">
-            <h6 class="m-b-20"><a href="teacher-view-student-marks" style="text-decoration: none;color:white;">O'quvchilar natijasi</a> </h6>
-            <h2 class="text-right"><i class="fas fa-sort-numeric-up f-left"></i><span>:)</span></h2>
+            <h5 class="m-b-20"> <a href="{% url 'teacher-classes-student' c.id  %}" style="text-decoration: none;color:white;">{{c.class_name}}</a> </h5>
+                <h4 class="text-right"><i class="fas fa-user-graduate f-left"></i><span>{{teacher_course}}</span></h4>
             
           </div>
         </div>
       </div>
-  
+    {% endfor %}
      
   
      

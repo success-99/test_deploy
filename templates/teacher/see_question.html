@@ -25,7 +25,7 @@
 <div class="container">
   <div class="panel panel-primary">
     <div class="panel-heading">
-      <h6 class="panel-title">Savollar</h6>
+      <h6 class="panel-title">Savollar: {{q_count}} ta Jami ball: {{t_marks}}</h6>
     </div>
     <table class="table table-hover" id="dev-table">
       <thead>
@@ -34,7 +34,7 @@
           <th>Savol</th>
          
           <th>Ballar</th>
-          <th>Savollarni yangilash</th>
+          <th>Savollarni tahrirlash</th>
           <th>Savollarni O'chirish</th>
         </tr>
       </thead>
@@ -44,12 +44,9 @@
       <tr>
 
         <td> {{c.question|safe}}</td>
-
         <td>{{c.marks}}</td>
-        {% if c.check_teacher_question(user) %}
         <td><a class="btn btn-primary btn-xs" href="{% url 'update-question-teacher' c.id  %}"><span class="glyphicon glyphicon-edit"></span></a></td>
         <td><a class="btn btn-primary btn-xs" href="{% url 'remove-question' c.id  %}"><span class="glyphicon glyphicon-trash"></span></a></td>
-        {% endif %}
       </tr>
       {% endfor %}
     </table>

@@ -1,4 +1,4 @@
-{% extends 'quiz/adminbase.html' %}
+{% extends 'teacher/teacherbase.html' %}
 {% block content %}
 {%load static%}
 
@@ -6,7 +6,6 @@
   <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
   <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-
   <style media="screen">
     a:link {
       text-decoration: none;
@@ -19,13 +18,16 @@
     .row {
       margin: 100px;
     }
+
   </style>
 </head>
 <br><br>
 <div class="container">
   <div class="panel panel-primary">
     <div class="panel-heading">
-      <h6 class="panel-title">O'quvchilar</h6>
+      <h6 class="panel-title">O'quvchilar soni: {{student_count}}</h6>
+      <h6 class="panel-title">Natijalari</h6>
+      <a class="btn btn-primary btn-sm" href="{% url 'download_student_results' filename=filename  %}" onclick="this.style.pointerEvents='none'; this.innerHTML='Yuklandi! Qayta yulklash uchun sahifani yangilang!!!';">Excel <span class="glyphicon glyphicon-save"></span></a>
     </div>
     <table class="table table-hover" id="dev-table">
       <thead>
@@ -33,10 +35,9 @@
 
           <th>I.F</th>
           <th>Sinf raqami</th>
-          <th>Telefon raqami</th>
-
-          <th>Yangilash</th>
-          <th>O'chirib tashlash</th>
+          <th>Fan nami</th>
+          <th>Natijalarni ko'rish</th>
+          
         </tr>
       </thead>
       {% for t in students %}
@@ -44,16 +45,21 @@
 
         <td> {{t.get_name}}</td>
         <td> {{t.classes}}</td>
-
-        <td>{{t.mobile}}</td>
-
-        <td><a class="btn btn-primary btn-xs" href="{% url 'update-student' t.id  %}"><span class="glyphicon glyphicon-edit"></span></a></td>
-        <td><a class="btn btn-danger btn-xs" href="{% url 'delete-student' t.id  %}"><span class="glyphicon glyphicon-trash"></span></a></td>
+        <td> {{course_name}}</td>
+        <td><a class="btn btn-primary btn-xs" href="{% url 'teacher-view-class-student-date' t.id  %}"><span class="glyphicon glyphicon-eye-open"></span></a></td>
+        
       </tr>
       {% endfor %}
     </table>
   </div>
 </div>
+<script>
+  function disableButton(button) {
+    button.style.color = 'red';
+    }
+</script>
 
-<br><br><br><br><br><br>
+
+
+<br><br><br><br><br><br><br>
 {% endblock content %}

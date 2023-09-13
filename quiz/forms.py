@@ -15,6 +15,10 @@ class TeacherSalaryForm(forms.Form):
     salary = forms.IntegerField()
 
 
+class ClassesForm(forms.Form):
+    classes = forms.CharField(max_length=50)
+
+
 class CourseForm(forms.ModelForm):
     class Meta:
         model = models.Course
@@ -22,15 +26,29 @@ class CourseForm(forms.ModelForm):
 
 
 class QuestionForm(forms.ModelForm):
-    # this will show dropdown __str__ method course model is shown on html so override it
-    # to_field_name this will fetch corresponding value  user_id present in course model and return it
-    courseID = forms.ModelChoiceField(queryset=models.Course.objects.all(), empty_label="Course Name",
-                                      to_field_name="id")
+
+    classes = forms.ModelChoiceField(queryset=models.Classes.objects.all(), empty_label="Sinfni tanlash",
+                                     to_field_name="id")
 
     class Meta:
         model = models.Question
-        fields = ['marks', 'question', 'option1', 'option2', 'option3', 'option4', 'answer']
+        fields = ['marks', 'question', 'variant_A', 'variant_B', 'variant_C', 'variant_D', 'answer']
         widgets = {
-            # 'question': forms.Textarea(attrs={'rows': 9, 'cols': 50})
-            'question': forms.CharField(widget=CKEditorUploadingWidget())
+            'question': forms.CharField(widget=CKEditorUploadingWidget()),
+            'variant_A': forms.CharField(widget=CKEditorUploadingWidget()),  # Textarea o'lchamini o'zgartirish
+            'variant_B': forms.CharField(widget=CKEditorUploadingWidget()),  # Textarea o'lchamini o'zgartirish
+            'variant_C': forms.CharField(widget=CKEditorUploadingWidget()),  # Textarea o'lchamini o'zgartirish
+            'variant_D': forms.CharField(widget=CKEditorUploadingWidget()),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        options = [cleaned_data.get('variant_A'), cleaned_data.get('variant_B'), cleaned_data.get('variant_C'), cleaned_data.get('variant_D')]
+
+        if not cleaned_data.get('question') or not cleaned_data.get('marks') or not cleaned_data.get(
+                'variant_A') or not cleaned_data.get('variant_B') or not cleaned_data.get(
+                'variant_C') or not cleaned_data.get('variant_D') or not cleaned_data.get('answer'):
+            raise forms.ValidationError('Barcha maydonlarni to\'ldiring!')
+        if len(options) != len(set(options)):
+            raise forms.ValidationError('Variantlar bir biriga teng bo\'lishi mumkin emas!')
+

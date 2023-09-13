@@ -18,7 +18,9 @@
 
 
 <br><br><br>
-<h3 style="text-align: center;color: red;">O'quvchi | Ro'yhatdan o'tish</h3>
+<h3 style="text-align: center;color: red;">O'quvchini ro'yhatdan o'tkazish</h3>
+    <h4 style="text-align: center;color: blue;"> Eslatma!</h4>
+    <h6 style="text-align: center;color: blue;">Foydalanuvchi nomi va Parolni eslab qoling!</h6>
 <form method="POST" autocomplete="off" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="form-row">
@@ -27,8 +29,19 @@
         {% render_field userForm.username|attr:'required:true'  class="form-control" placeholder="Foydalanuvchi nomi" %}
       </div>
       <div class="form-group col-md-6">
-        <label for="inputPassword4">Parol</label>
+        <label for="email">Email</label>
+        {% render_field userForm.email|attr:'required:true'  class="form-control" placeholder="Email" %}
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="inputPassword4">Parol_1</label>
         {% render_field userForm.password|attr:'required:true'  class="form-control" placeholder="Parol" %}
+      </div>
+      <div class="form-group col-md-6">
+        <label for="inputPassword4">Parol_2</label>
+        {% render_field userForm.con_password|attr:'required:true'  class="form-control" placeholder="Parolni takrorlang" %}
       </div>
     </div>
 
@@ -48,26 +61,46 @@
           <label for="mobile">Telefon raqam</label>
           {% render_field studentForm.mobile|attr:'required:true'  class="form-control" placeholder="Telefon raqami" %}
         </div>
-        <div class="form-group col-md-6">
-          <label for="address">Manzil</label>
-          {% render_field studentForm.address|attr:'required:true'  class="form-control" placeholder="Manzili" %}
+       <div class="form-group col-md-6">
+          <label for="classes">Sinf tanlash</label>
+          {% render_field studentForm.classes|attr:'required:true' class="form-control" placeholder="Sinfni tanlash" %}
         </div>
       </div>
 
-      <div class="form-row">
-        <div class="form-group col-md-12">
-          <label for="profile_pic">Profil rasm</label>
-          {% render_field studentForm.profile_pic|attr:'required:true' class="form-control" placeholder="rasm yuklash" %}
-        </div>
-        
-      </div>
 
 
     <button type="submit" class="btn btn-primary">Ro'yhatdan o'tish</button>
+  <!-- Display validation errors for userForm -->
+    {% if userForm.errors %}
+    <div class="alert alert-danger mt-3">
+        <strong>Xatoliklar (foydalanuvchi):</strong>
+        <ul>
+            {% for field in userForm %}
+            {% for error in field.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- Display validation errors for studentForm -->
+    {% if studentForm.errors %}
+    <div class="alert alert-danger mt-3">
+        <strong>Xatoliklar (student):</strong>
+        <ul>
+            {% for field in studentForm %}
+            {% for error in field.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
   </form>
 
 
-<br><br>
+<br>
 {% include "quiz/footer.html" %}
   </body>
 </html>

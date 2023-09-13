@@ -32,9 +32,8 @@
         <tr>
 
           <th>Ismi</th>
-          <th>Profil rasmi</th>
           <th>Telefon raqami</th>
-          <th>Manzili</th>
+          <th>Fan nomi</th>
          
           <th>Yangilash</th>
           <th>O'chirib tashlash</th>
@@ -44,9 +43,8 @@
       <tr>
 
         <td> {{t.get_name}}</td>
-        <td> <img src="{% static t.profile_pic.url %}" alt="Profile Pic" height="40px" width="40px" /></td>
         <td>{{t.mobile}}</td>
-        <td>{{t.address}}</td>
+        <td>{{t.course}}</td>
         
         <td><a class="btn btn-primary btn-xs" href="{% url 'update-teacher' t.id  %}"><span class="glyphicon glyphicon-edit"></span></a></td>
         <td><a class="btn btn-danger btn-xs" href="{% url 'delete-teacher' t.id  %}"><span class="glyphicon glyphicon-trash"></span></a></td>

@@ -1,0 +1,68 @@
+{% extends 'teacher/teacherbase.html' %}
+{% block content %}
+{%load static%}
+
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+
+    h6 {
+      text-align: center;
+    }
+    h3 {
+      text-align: center;
+    }
+
+    .row {
+      margin: 100px;
+    }
+    ul {
+    list-style:none;
+
+}
+  </style>
+</head>
+<br><br>
+<div class="container">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h6 class="panel-title">Barcha natijalar</h6>
+    </div>
+
+    {% for result in results %}
+      <h3 style="color: blue">{{ result.course }} fanidan test natijalari</h3>
+
+    <p style="color: blue">Test ishlangan vaqti: {{ result.date }}</p>
+
+    <ul>
+        {% for question_result in result.question_results %}
+        <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+
+            <li>
+                <p>Savol {{ forloop.counter }}</p>
+                {{ question_result.question |safe }}
+                <p style="color: green">To'g'ri javob: {{ question_result.correct_answer }}</p>
+
+                <p> Tanlanlangan javob:  {% if question_result.selected_answer == question_result.correct_answer %}
+            <span style="color: green;">{{ question_result.selected_answer }}</span>
+            {% else %}
+            <span style="color: red;">{{ question_result.selected_answer }}</span>
+            {% endif %}</p>
+            </li>
+
+        {% endfor %}
+    </ul>
+
+{% endfor %}
+  </div>
+</div>
+
+<br><br><br><br><br><br>
+{% endblock content %}

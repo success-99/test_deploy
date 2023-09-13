@@ -5,11 +5,14 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="path/to/assets/content-styles.css" type="text/css">
+<!--    <link rel="stylesheet" href="path/to/assets/content-styles.css" type="text/css">-->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
+<!--<script>-->
+<!--        CKEDITOR.replace( 'text-area-id' );-->
+<!--        CKEDITOR.config.allowedContent = true;-->
+<!--</script>-->
   <style>
        <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -21,39 +24,42 @@
     
   </style>
 </head>
-<h2 style="text-align:center; color:blue;">Savol qo'shoish</h2>
+<h2 style="text-align:center; color:blue;">Savol qo'shish</h2>
 <form method="POST" enctype="multipart/form-data" autocomplete="off" style="margin:100px;margin-top: 0px;">
     {%csrf_token%}
     {{ questionForm.media }}
     <div class="form-group">
+
         <label for="question">Fan</label>
-      {% render_field questionForm.courseID|attr:'required:true' class="form-control"  %}
+      {% render_field questionForm.classes|attr:'required:true' class="form-control"  %}
         <br>
 
       <label for="question">Savol</label>
       {% render_field questionForm.question|attr:'required:true' class="form-control" placeholder="What is the currency of Uzbekistan ?" %}
-        <br>
+        <br><br>
       <label for="question_number">Ball</label>
       {% render_field questionForm.marks|attr:'required:true' class="form-control" placeholder="10" %}
         <br>
-      <label for="option1">Variant 1</label>
-      {% render_field questionForm.option1|attr:'required:true' class="form-control" placeholder="Rupees" %}
-        <br>
-      <label for="option2">Variant 2</label>
-      {% render_field questionForm.option2|attr:'required:true' class="form-control" placeholder="Dollar" %}
-        <br>
-      <label for="option3">Variant 3</label>
-      {% render_field questionForm.option3|attr:'required:true' class="form-control" placeholder="Sum" %}
-        <br>
-      <label for="option4">Variant 4</label>
-      {% render_field questionForm.option4|attr:'required:true' class="form-control" placeholder="Euro" %}
-        <br>
-      <label for="answer">Javob</label>
+      <label for="variant_A">Variant A</label>
+      {% render_field questionForm.variant_A|attr:'required:true' class="form-control" placeholder="Rupees" %}
+        <br><br>
+      <label for="variant_B">Variant B</label>
+      {% render_field questionForm.variant_B|attr:'required:true' class="form-control" placeholder="Dollar" %}
+        <br><br>
+      <label for="variant_C">Variant C</label>
+      {% render_field questionForm.variant_C|attr:'required:true' class="form-control" placeholder="Sum" %}
+        <br><br>
+      <label for="variant_D">Variant D</label>
+      {% render_field questionForm.variant_D|attr:'required:true' class="form-control" placeholder="Euro" %}
+        <br><br>
+      <label for="answer">To'g'ri javobni tanlang</label>
       {% render_field questionForm.answer|attr:'required:true' class="form-control" %}
     </div>
 
 
+
     <button type="submit" class="btn btn-primary">Qo'shish</button>
+
   </form>
 <br><br><br>
 {% endblock content %}

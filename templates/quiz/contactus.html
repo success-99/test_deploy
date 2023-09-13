@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 {% load static %}
+{% load widget_tweaks %}
+
 <html lang="en" dir="ltr">
 
 <head>
@@ -16,21 +18,34 @@
   <br><br>
 
   <center>
-    <h3 class='alert alert-success'>Bizga qimmatli fikr-mulohazalaringiz bo'lsa yuboring! !</h3>
+
+    <h3 class='alert alert-success'>Bizga qimmatli fikr-mulohazalaringiz yoki shikoyatlaringiz bo'lsa yuboring!</h3>
 
     <form method="POST" autocomplete="off">
       <!-- Very Important csrf Token -->
       {% csrf_token %}
       <div class="form-group">
-        <p>
-        <h3>{{ form.as_p }}</h3>
-        </p>
+      <div class="form-group col-md-6">
+        <label for="ism">Ismingizni kiriting</label>
+        {% render_field form.Name|attr:'required:true'  class="form-control" placeholder="Bahodir" %}
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="email">Emailingizni kiriting</label>
+        {% render_field form.Email|attr:'required:true'  class="form-control" placeholder="john.smith@gmail.com" %}
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="validationTextarea">Xabar matningizni yozing</label>
+        {% render_field form.Message|attr:'required:true'  class="form-control" placeholder="Men sizga shuni..." %}
+     </div>
+
         <br>
-        <input type="submit" value="Send Message" class='btn btn-primary btn-lg'>
+        <input type="submit" value="Yuborish" class='btn btn-primary btn-lg'>
       </div>
     </form>
   </center>
-
+<br><br><br><br><br><br>
   {% include "quiz/footer.html" %}
 </body>
 

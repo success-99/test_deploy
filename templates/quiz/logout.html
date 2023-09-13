@@ -3,16 +3,32 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+
+  <style media="screen">
+    .jumbotron {
+      margin-bottom: 0px;
+    }
+
+    .jumbotron h1 {
+      text-align: center;
+    }
+  </style>
     <title></title>
   </head>
   <body>
     {% include "quiz/navbar.html" %}
     <br><br><br><br><br>
-<img src="{% static "image/logout_img.png" %}"  style="width:800px; height:100px; padding-left:400px;">
+<!--<img src="{% static 'image/logout_img.png' %}"  style="width:800px; height:100px; padding-left:400px;">-->
+<div class="jumbotron">
+    <h1 class="display-4 text-info">Muvaffaqiyatli chiqdingiz !!!</h1>
+    <hr class="my-4">
 
+    <p class="lead">
+      <a class="btn btn-primary btn-lg" href="/" role="button">Bosh sahifa</a>
+    </p>
+  </div>
 <br><br><br><br><br>
-<br><br><br><br><br>
-<br><br>
+<br><br><br><br>
 {% include "quiz/footer.html" %}
 
   </body>

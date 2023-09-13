@@ -36,11 +36,11 @@
                         </p><ul style="list-style:decimal;">
                             <li>Barcha savollar ko'p tanovli.</li>
                             <li><span class="text-danger">Fatgina bitta tanlov to'g'ri.</span></li>
-                            <li>Testni tugatganingiz zahoti natijangiz ko'rsatiladi.
+                            <li>Testni tugatganingiz so'ng natijangiz Natijalar bo'limida ko'rsatiladi.
                             </li>
                         </ul>
                     <p></p>
-                    <a href="{% url 'start-exam' course.id  %}" class="btn btn-info">Testni boshlash</a>
+                    <a href="{% url 'start-exam' course.id  %}?clear_cookies=1" class="btn btn-info">Testni boshlash</a>
                 </div>  
                 <div class="card-footer">Omad!</div>
             </div>  

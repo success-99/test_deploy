@@ -1,11 +1,16 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, PermissionsMixin
+from quiz.models import BaseModel
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+# from .utils import send_registration_notification_email
+
+# from .bot import send_telegram_message
 
 
-class Student(models.Model):
+class Student(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_pic = models.ImageField(upload_to='profile_pic/Student/', null=True, blank=True)
-    address = models.CharField(max_length=40)
+    classes = models.ForeignKey("quiz.Classes", on_delete=models.CASCADE)
     mobile = models.CharField(max_length=20, null=False)
 
     @property
@@ -18,3 +23,11 @@ class Student(models.Model):
 
     def __str__(self):
         return self.user.first_name
+
+
+# @receiver(post_save, sender=Student)
+# def student_registration_handler(sender, instance, created, **kwargs):
+#     if created:
+#         # Yangi student ro'yxatdan o'tgan
+#         classes_count = Student.objects.filter(user__is_active=True).count()
+#         send_registration_notification_email(classes_count)

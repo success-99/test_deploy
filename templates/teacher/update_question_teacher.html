@@ -35,37 +35,12 @@
 </head>
 
 <br><br>
-<h3 style="text-align:center;">Savollarni yangilash</h3>
+<h3 style="text-align:center;">Savollarni tahrirlash</h3>
 <div>
   <form method="post" autocomplete="off" enctype="multipart/form-data" style="margin-left:200px;margin-right:200px;">
       {% csrf_token %}
       {{ form.media }}
     {{ form.as_p }}
-
-<!--    <div class="form-group">-->
-<!--       <label for="question">Savol</label>-->
-<!--      {% render_field questionForm.question|attr:'required:true' class="form-control" placeholder="What is the currency of Uzbekistan ?" %}-->
-<!--        <br>-->
-<!--      <label for="question_number">Ball</label>-->
-<!--      {% render_field questionForm.marks|attr:'required:true' class="form-control" placeholder="10" %}-->
-<!--        <br>-->
-<!--      <label for="option1">Variant 1</label>-->
-<!--      {% render_field questionForm.option1|attr:'required:true' class="form-control" placeholder="Rupees" %}-->
-<!--        <br>-->
-<!--      <label for="option2">Variant 2</label>-->
-<!--      {% render_field questionForm.option2|attr:'required:true' class="form-control" placeholder="Dollar" %}-->
-<!--        <br>-->
-<!--      <label for="option3">Variant 3</label>-->
-<!--      {% render_field questionForm.option3|attr:'required:true' class="form-control" placeholder="Sum" %}-->
-<!--        <br>-->
-<!--      <label for="option4">Variant 4</label>-->
-<!--      {% render_field questionForm.option4|attr:'required:true' class="form-control" placeholder="Euro" %}-->
-<!--        <br>-->
-<!--      <label for="answer">Javob</label>-->
-<!--      {% render_field questionForm.answer|attr:'required:true' class="form-control" %}-->
-<!--    </div>-->
-
-
 
 <br><br>
     <input type="submit" value="Yangilash">

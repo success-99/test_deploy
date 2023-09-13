@@ -25,26 +25,30 @@
 <div class="container">
   <div class="panel panel-primary">
     <div class="panel-heading">
-      <h6 class="panel-title">O'quvchilar</h6>
+      <h6 class="panel-title">Barcha natijalar</h6>
     </div>
     <table class="table table-hover" id="dev-table">
       <thead>
         <tr>
-
-          <th>I.F</th>
-          <th>Profil rasm</th>
-          <th>Ko'rish</th>
+          <th>Urinishlar</th>
+          <th>Imtihon olingan vaqtlari</th>
+          <th>Barcha ballar</th>
+          <th>Xatolarni ko'rish</th>
           
+
+
         </tr>
       </thead>
-      {% for t in students %}
+      {% for t in results %}
       <tr>
+        <td>Urinish {{ forloop.counter }}</td>
+        <td> {{t.date}}</td>
+        <td> {{t.marks}}</td>
+        <td> <a class="btn btn-primary btn-xs" href="{% url 'teacher-student-result' t.id  %}"><span class="glyphicon glyphicon-eye-open"></span></a></td>
+        <td><a class="btn btn-primary btn-xs" href="{% url 'remove-result' t.id  %}"><span class="glyphicon glyphicon-trash"></span></a></td>
 
-        <td> {{t.get_name}}</td>
-        <td> <img src="{% static t.profile_pic.url %}" alt="Profile Pic" height="40px" width="40px" /></td>
+
         
-        
-        <td><a class="btn btn-primary btn-xs" href="{% url 'teacher-view-marks' t.id  %}"><span class="glyphicon glyphicon-eye-open"></span></a></td>
         
       </tr>
       {% endfor %}

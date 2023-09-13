@@ -16,62 +16,67 @@
   <form class="form" autocomplete="off" onsubmit="return saveAns()"  action="/student/calculate-marks" method="POST">
     {% csrf_token %}
     <h1 style="text-align: center;">{{course.course_name}}</h1>
+
     {% for q in questions%}
+
     <h3 class="text-info">{{ forloop.counter }}. {{q.question | safe }}</h3><h4 style="text-align: right;">[Ball {{q.marks}}]</h4>
-    
+
         <input type="hidden" name="csrfmiddlewaretoken" value="C24rUotmdHawVQJL3KrqiWxvti8UffOFYUc8TRbZtLt36AVLdP3jbkzUVe3beRAa">
-        
-        
+
+
           <div class="form-check mx-4">
-            <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option1}}" value="Option1">
-            <label class="form-check-label" for="option1">
-              {{q.option1}}
+            <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.variant_A}}" value="variant_A">
+            <label class="form-check-label" for="variant_A">
+              {{q.variant_A | safe }}
             </label>
           </div>
 
-        
+
           <div class="form-check mx-4">
-            <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option2}}" value="Option2">
-            <label class="form-check-label" for="option2">
-              {{q.option2}}
+            <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.variant_B}}" value="variant_B">
+            <label class="form-check-label" for="variant_B">
+              {{q.variant_B | safe }}
             </label>
           </div>
 
-        
+
           <div class="form-check mx-4">
-            <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option3}}" value="Option3">
-            <label class="form-check-label" for="option3">
-              {{q.option3}}
+            <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.variant_C}}" value="variant_C">
+            <label class="form-check-label" for="variant_C">
+              {{q.variant_C | safe }}
             </label>
           </div>
 
-        
+
           <div class="form-check mx-4">
-            <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option4}}" value="Option4">
-            <label class="form-check-label" for="option4">
-              {{q.option4}}
+            <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.variant_D}}" value="variant_D">
+            <label class="form-check-label" for="variant_D">
+              {{q.variant_D | safe }}
             </label>
           </div>
+<hr style="height:2px;border-width:0;color:gray;background-color:gray">
 
         {% endfor %}
+
+
         <input class="btn btn-info btn-lg"   type="submit" value="Tugatish">
     </form>
   </div>
 
-<script> 
-    function saveAns(){  
+<script>
+    function saveAns(){
 
-        var ele = document.getElementsByTagName('input'); 
-        for(i = 0; i < ele.length; i++) { 
-            if(ele[i].type="radio") { 
-                if(ele[i].checked){        
+        var ele = document.getElementsByTagName('input');
+        for(i = 0; i < ele.length; i++) {
+            if(ele[i].type="radio") {
+                if(ele[i].checked){
                   setCookie(ele[i].name,ele[i].value,3)
                 }
-            } 
-        } 
-          
+            }
+        }
+
     }
-    
+
     function setCookie(cname, cvalue, exdays) {
   var d = new Date();
   d.setTime(d.getTime() + (exdays*24*60*60*1000));
@@ -79,7 +84,7 @@
   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
-</script> 
+</script>
 
 <br><br><br><br><br><br>
 {% endblock content %}

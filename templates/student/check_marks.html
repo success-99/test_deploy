@@ -41,8 +41,8 @@
       {% for t in results %}
       <tr>
 
-        <td> {{t.exam}}</td>
-        <td> {{t.marks}}</td>
+        <td> {{t.course}}</td>
+        <td><b> <span style="color: blue">{{ t.marks }}</span>/<span style="color: green">{{ total_marks }}</span></b></td>
         <td>Urinish {{ forloop.counter }}</td>
         <td> {{t.date}}</td>
         

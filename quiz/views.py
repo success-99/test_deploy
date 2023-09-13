@@ -1,5 +1,4 @@
 import os
-
 from django.shortcuts import render, redirect, reverse
 from django.views.generic import UpdateView
 
@@ -18,7 +17,6 @@ from teacher import forms as TFORM
 from student import forms as SFORM
 from django.contrib.auth.models import User
 from django.contrib import messages
-
 from .models import Question
 
 
@@ -167,17 +165,20 @@ def update_student_view(request, pk):
     student = SMODEL.Student.objects.get(id=pk)
     user = SMODEL.User.objects.get(id=student.user_id)
     userForm = SFORM.StudentUserForm(instance=user)
-    studentForm = SFORM.StudentForm(request.FILES, instance=student)
+    studentForm = SFORM.StudentForm(instance=student)
     mydict = {'userForm': userForm, 'studentForm': studentForm}
     if request.method == 'POST':
         userForm = SFORM.StudentUserForm(request.POST, instance=user)
-        studentForm = SFORM.StudentForm(request.POST, request.FILES, instance=student)
+        studentForm = SFORM.StudentForm(request.POST, instance=student)
         if userForm.is_valid() and studentForm.is_valid():
             user = userForm.save()
             user.set_password(user.password)
             user.save()
             studentForm.save()
             return redirect('admin-view-student')
+        else:
+            mydict = {'userForm': userForm, 'studentForm': studentForm}
+
     return render(request, 'quiz/update_student.html', context=mydict)
 
 
@@ -298,7 +299,8 @@ def contactus_view(request):
             email = sub.cleaned_data['Email']
             name = sub.cleaned_data['Name']
             message = sub.cleaned_data['Message']
-            send_mail(str(name) + ' || ' + str(email), message, settings.EMAIL_HOST_USER, settings.EMAIL_RECEIVING_USER,
+
+            send_mail(str(f'Ismi: {name}') + ' || ' + str(f' Emaili: {email}'), message, settings.EMAIL_HOST_USER, [settings.ADMIN_EMAIL],
                       fail_silently=False)
             return render(request, 'quiz/contactussuccess.html')
     return render(request, 'quiz/contactus.html', {'form': sub})
@@ -308,7 +310,7 @@ class QuestionUpdateViewAdmin(UpdateView):
 
     model = Question
     template_name = 'quiz/question_update.html'
-    fields = ['marks', 'question', 'option1', 'option2', 'option3', 'option4', 'answer']
+    fields = ['marks', 'question', 'variant_A', 'variant_B', 'variant_C', 'variant_D', 'answer']
 
     success_url = '/admin-view-question'
 
@@ -316,7 +318,7 @@ class QuestionUpdateViewAdmin(UpdateView):
 class QuestionUpdateViewTeacher(UpdateView):
     model = Question
     template_name = 'teacher/update_question_teacher.html'
-    fields = ['marks', 'question', 'option1', 'option2', 'option3', 'option4', 'answer']
+    fields = ['classes', 'marks', 'question', 'variant_A', 'variant_B', 'variant_C', 'variant_D', 'answer']
 
     success_url = '/teacher/teacher-view-question'
 
@@ -326,7 +328,10 @@ class QuestionUpdateViewTeacher(UpdateView):
         if question.teacher == self.request.user.pk:
             question.save()
             messages.success(self.request, 'Savol muvaffaqiyatli yangilandi!')
-            return HttpResponseRedirect(self.get_success_url())
+            return super().form_valid(form)
         return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('see-question', kwargs={'class_id': self.object.classes.id})
 
 

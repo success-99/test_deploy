@@ -133,7 +133,7 @@
 
     .content {
       margin-left: 250px;
-      background: url(background.png) no-repeat;
+      background-image: url(background.png) no-repeat;
       background-position: center;
       background-size: cover;
       height: 100vh;
@@ -166,6 +166,7 @@
     <div class="left_area">
       <h3>Online Test</h3>
     </div>
+
     <div class="right_area">
       <a href="/logout" class="logout_btn">Chiqib ketish</a>
     </div>
@@ -175,15 +176,18 @@
   <div class="sidebar">
     <center>
 
-      <img src="{% static "image/student.png" %}" class="profile_image" alt="">
+      <img src="{% static 'image/student.png' %}" class="profile_image" alt="">
       <h4>{{request.user.first_name}}</h4>
-      <h6 style="color: rgb(255, 255, 255);">( O'quvchi )</h6>
+      <h6 style="color: rgb(255, 255, 255);">{{student_class}}</h6>
+      <h6 style="color: rgb(255, 255, 255);">* O'quvchi *</h6>
 
     </center>
 
     <a href="/student/student-dashboard"><i class="fas fa-tachometer-alt"></i><span>Bosh sahifa</span></a>
-    <a href="/student/student-exam"><i class="fas fa-book"></i><span>Imtihon</span></a>
+    <a href="/student/student-teachers"><i class="fas fa-chalkboard-teacher"></i><span>O'qituvchilar</span></a>
+    <a href="/student/student-exam"><i class="fas fa-book"></i><span>Imtihonlar</span></a>
     <a href="/student/student-marks"><i class="fas fa-sort-numeric-up"></i><span>Natijalar</span></a>
+
   </div>
   <!--sidebar end-->
 
