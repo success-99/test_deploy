@@ -1,0 +1,76 @@
+{% extends 'quiz/adminbase.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<!--    <link rel="stylesheet" href="path/to/assets/content-styles.css" type="text/css">-->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  <style>
+       <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  a:link {
+        text-decoration: none;
+      }
+      .form-container {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Bu qator orqali tugma ko'rinishini o'zgartirishingiz mumkin */
+    .submit-button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .submit-button:hover {
+        background-color: #0056b3;
+    }
+
+  </style>
+</head>
+<br><br>
+<div class="container">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h6 class="panel-title">Barcha fanlar</h6>
+    </div>
+    <table class="table table-hover" id="dev-table">
+      <thead>
+        <tr>
+
+          <th>Fan nomi</th>
+
+          <th>Ko'rish</th>
+          <th> </th>
+        </tr>
+      </thead>
+      {% for c in course %}
+      <tr>
+
+        <td> {{c.course_name}}</td>
+
+
+        <td><a class="btn btn-danger btn-xs" href="{% url 'admin-update-click-course' c.id %}"><span class="glyphicon glyphicon-eye-open"></span></a></td>
+        <th> </th>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+<br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br>
+{% endblock content %}

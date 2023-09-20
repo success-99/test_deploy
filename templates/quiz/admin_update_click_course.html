@@ -1,15 +1,20 @@
-{% extends 'teacher/teacherbase.html' %}
+{% extends 'quiz/adminbase.html' %}
 {% load static %}
 {% load widget_tweaks %}
 {% block content %}
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<!--    <link rel="stylesheet" href="path/to/assets/content-styles.css" type="text/css">-->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
   <style>
+       <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   a:link {
         text-decoration: none;
       }
@@ -47,7 +52,7 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="submit-button">Saqlash</button>
+        <button type="submit" class="submit-button" onclick="return confirm('O\'zgartirishga, ishonchingiz komilmi? Fan o\'qituvchisi xabardormi?')">Saqlash</button>
     </form>
 </div>
 <br><br><br><br><br><br><br><br><br><br><br>

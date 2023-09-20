@@ -27,7 +27,7 @@
     <div class="panel-heading">
       <h6 class="panel-title">O'quvchilar soni: {{student_count}}</h6>
       <h6 class="panel-title">Natijalari</h6>
-      <a class="btn btn-primary btn-sm" href="{% url 'download_student_results' filename=filename  %}" onclick="this.style.pointerEvents='none'; this.innerHTML='Yuklandi! Qayta yulklash uchun sahifani yangilang!!!';">Excel <span class="glyphicon glyphicon-save"></span></a>
+      <a class="btn btn-primary btn-sm" href="{% url 'download_student_results' %}" onclick="this.style.pointerEvents='none'; this.innerHTML='<strong>Yuklandi!</strong> Qayta yulklash uchun sahifani yangilang!!!';">Excel <span class="glyphicon glyphicon-save"></span></a>
     </div>
     <table class="table table-hover" id="dev-table">
       <thead>

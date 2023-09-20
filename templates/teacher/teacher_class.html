@@ -69,12 +69,13 @@
     }
     </style>
   </head>
-<br><br>
+<h2 style="text-align:center;">Sinflar kesimida o'quvchilarni natijalarini ko'rishingiz munkin!</h2>
 
+<br><br>
   <div class="container">
     <div class="row">
     {% for c in classes%}
-      <div class="col-md-4 col-xl-9">
+      <div class="col-md-4 col-xl-12">
         <div class="card bg-c-blue order-card">
           <div class="card-block">
             <h5 class="m-b-20"> <a href="{% url 'teacher-classes-student' c.id  %}" style="text-decoration: none;color:white;">{{c.class_name}}</a> </h5>
@@ -89,7 +90,6 @@
      
     </div>
   </div>
-
 
 <br><br><br><br><br><br><br><br><br><br>
 

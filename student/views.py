@@ -12,7 +12,6 @@ from student import models as SMODEL
 from django.contrib import messages
 
 
-
 # for showing signup/login button for student
 def studentclick_view(request):
     if request.user.is_authenticated:
@@ -79,9 +78,11 @@ def take_exam_view(request, pk):
     total_marks = 0
     for q in questions:
         total_marks = total_marks + q.marks
-
-    return render(request, 'student/take_exam.html',
+    response = render(request, 'student/take_exam.html',
                   {'course': course, 'total_questions': total_questions, 'total_marks': total_marks})
+    response.set_cookie('course_id', course.id)
+    return response
+
 
 
 @login_required(login_url='studentlogin')
@@ -95,6 +96,7 @@ def start_exam_view(request, pk):
         messages.error(request, "Bu imtihon hali faollashtirilmagan")
 
         return HttpResponse("Bu kurs hali faollashtirilmagan")
+
     if 'clear_cookies' in request.GET and request.GET['clear_cookies'] == '1':
         response = render(request, 'student/start_exam.html', {'course': course, 'questions': questions})
         for i in range(len(questions)):
@@ -104,7 +106,8 @@ def start_exam_view(request, pk):
     if request.method == 'POST':
         pass
     response = render(request, 'student/start_exam.html', {'course': course, 'questions': questions})
-    response.set_cookie('course_id', course.id)
+    if request.COOKIES.get('course_id') is None:
+        response.set_cookie('course_id', course.id)
     return response
 
 
@@ -141,7 +144,6 @@ def calculate_marks_view(request):
         result.classes = student_classes  # O'quvchining classes qiymatini saqlash
         result.question_results = question_results
         result.save()
-
         return HttpResponseRedirect('student-marks')
 
 
@@ -158,7 +160,7 @@ def check_marks_view(request, pk):
     course = QMODEL.Course.objects.get(id=pk)
     course_t_m = course.total_marks
     student = models.Student.objects.get(user_id=request.user.id)
-    results = QMODEL.Result.objects.all().filter(course=course).filter(student=student)
+    results = QMODEL.Result.objects.all().filter(course=course).filter(student=student).order_by('date')
     return render(request, 'student/check_marks.html', {'results': results, 'total_marks': course_t_m})
 
 

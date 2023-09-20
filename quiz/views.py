@@ -1,7 +1,11 @@
 import os
 from django.shortcuts import render, redirect, reverse
 from django.views.generic import UpdateView
-
+from bs4 import BeautifulSoup
+from django.views.decorators.http import require_http_methods
+from django.http import JsonResponse
+import json
+from django.shortcuts import get_object_or_404
 from . import forms, models
 from django.db.models import Sum
 from django.contrib.auth.models import Group
@@ -18,7 +22,16 @@ from student import forms as SFORM
 from django.contrib.auth.models import User
 from django.contrib import messages
 from .models import Question
+from django.http import HttpResponse
+from django.contrib.auth import logout
+from openpyxl import Workbook
+from django.utils.encoding import smart_str
 
+def handling_404(request,exception):
+    return render(request, '404.html', {})
+
+def handling_500(request):
+    return render(request, '500.html')
 
 def home_view(request):
     if request.user.is_authenticated:
@@ -32,6 +45,10 @@ def is_teacher(user):
 
 def is_student(user):
     return user.groups.filter(name='STUDENT').exists()
+
+
+def is_staff_user(user):
+    return user.is_authenticated and user.is_staff
 
 
 def afterlogin_view(request):
@@ -55,6 +72,7 @@ def adminclick_view(request):
 
 
 @login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
 def admin_dashboard_view(request):
     dict = {
         'total_student': SMODEL.Student.objects.all().count(),
@@ -66,6 +84,7 @@ def admin_dashboard_view(request):
 
 
 @login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
 def admin_teacher_view(request):
     dict = {
         'total_teacher': TMODEL.Teacher.objects.all().filter(status=True).count(),
@@ -76,21 +95,23 @@ def admin_teacher_view(request):
 
 
 @login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
 def admin_view_teacher_view(request):
-    teachers = TMODEL.Teacher.objects.all().filter(status=True)
+    teachers = TMODEL.Teacher.objects.all().filter(status=True).order_by('course')
     return render(request, 'quiz/admin_view_teacher.html', {'teachers': teachers})
 
 
 @login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
 def update_teacher_view(request, pk):
     teacher = TMODEL.Teacher.objects.get(id=pk)
     user = TMODEL.User.objects.get(id=teacher.user_id)
     userForm = TFORM.TeacherUserForm(instance=user)
-    teacherForm = TFORM.TeacherForm(request.FILES, instance=teacher)
+    teacherForm = TFORM.TeacherForm(instance=teacher)
     mydict = {'userForm': userForm, 'teacherForm': teacherForm}
     if request.method == 'POST':
         userForm = TFORM.TeacherUserForm(request.POST, instance=user)
-        teacherForm = TFORM.TeacherForm(request.POST, request.FILES, instance=teacher)
+        teacherForm = TFORM.TeacherForm(request.POST, instance=teacher)
         if userForm.is_valid() and teacherForm.is_valid():
             user = userForm.save()
             user.set_password(user.password)
@@ -101,21 +122,26 @@ def update_teacher_view(request, pk):
 
 
 @login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
 def delete_teacher_view(request, pk):
     teacher = TMODEL.Teacher.objects.get(id=pk)
+    print(teacher)
     user = User.objects.get(id=teacher.user_id)
+    # print(user.)
     user.delete()
     teacher.delete()
     return HttpResponseRedirect('/admin-view-teacher')
 
 
 @login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
 def admin_view_pending_teacher_view(request):
     teachers = TMODEL.Teacher.objects.all().filter(status=False)
     return render(request, 'quiz/admin_view_pending_teacher.html', {'teachers': teachers})
 
 
 @login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
 def approve_teacher_view(request, pk):
     teacherSalary = forms.TeacherSalaryForm()
     if request.method == 'POST':
@@ -132,6 +158,7 @@ def approve_teacher_view(request, pk):
 
 
 @login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
 def reject_teacher_view(request, pk):
     teacher = TMODEL.Teacher.objects.get(id=pk)
     user = User.objects.get(id=teacher.user_id)
@@ -141,12 +168,14 @@ def reject_teacher_view(request, pk):
 
 
 @login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
 def admin_view_teacher_salary_view(request):
     teachers = TMODEL.Teacher.objects.all().filter(status=True)
     return render(request, 'quiz/admin_view_teacher_salary.html', {'teachers': teachers})
 
 
 @login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
 def admin_student_view(request):
     dict = {
         'total_student': SMODEL.Student.objects.all().count(),
@@ -155,12 +184,14 @@ def admin_student_view(request):
 
 
 @login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
 def admin_view_student_view(request):
-    students = SMODEL.Student.objects.all()
+    students = SMODEL.Student.objects.all().order_by('-classes')
     return render(request, 'quiz/admin_view_student.html', {'students': students})
 
 
 @login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
 def update_student_view(request, pk):
     student = SMODEL.Student.objects.get(id=pk)
     user = SMODEL.User.objects.get(id=student.user_id)
@@ -183,6 +214,7 @@ def update_student_view(request, pk):
 
 
 @login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
 def delete_student_view(request, pk):
     student = SMODEL.Student.objects.get(id=pk)
     user = User.objects.get(id=student.user_id)
@@ -192,11 +224,13 @@ def delete_student_view(request, pk):
 
 
 @login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
 def admin_course_view(request):
     return render(request, 'quiz/admin_course.html')
 
 
 @login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
 def admin_add_course_view(request):
     courseForm = forms.CourseForm()
     if request.method == 'POST':
@@ -210,12 +244,14 @@ def admin_add_course_view(request):
 
 
 @login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
 def admin_view_course_view(request):
     courses = models.Course.objects.all()
     return render(request, 'quiz/admin_view_course.html', {'courses': courses})
 
 
 @login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
 def delete_course_view(request, pk):
     course = models.Course.objects.get(id=pk)
     course.delete()
@@ -223,68 +259,95 @@ def delete_course_view(request, pk):
 
 
 @login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
 def admin_question_view(request):
     return render(request, 'quiz/admin_question.html')
 
 
 @login_required(login_url='adminlogin')
-def admin_add_question_view(request):
-    questionForm = forms.QuestionForm()
-    if request.method == 'POST':
-        questionForm = forms.QuestionForm(request.POST)
-        if questionForm.is_valid():
-            question = questionForm.save(commit=False)
-            course = models.Course.objects.get(id=request.POST.get('courseID'))
-            print(course)
-            question.course = course
-            question.save()
-        else:
-            print("form is invalid")
-        return HttpResponseRedirect('/admin-view-question')
-    return render(request, 'quiz/admin_add_question.html', {'questionForm': questionForm})
-
-
-@login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
 def admin_view_question_view(request):
     courses = models.Course.objects.all()
     return render(request, 'quiz/admin_view_question.html', {'courses': courses})
 
 
 @login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
 def view_question_view(request, pk):
-    questions = models.Question.objects.all().filter(course_id=pk)
+    questions = models.Question.objects.all().filter(course_id=pk).order_by('-classes')
     return render(request, 'quiz/view_question.html', {'questions': questions})
 
 
 @login_required(login_url='adminlogin')
-def delete_question_view(request, pk):
-    question = models.Question.objects.get(id=pk)
-    question.delete()
-    return HttpResponseRedirect('/admin-view-question')
-
-
-@login_required(login_url='adminlogin')
-def admin_view_student_marks_view(request):
-    students = SMODEL.Student.objects.all()
-    return render(request, 'quiz/admin_view_student_marks.html', {'students': students})
-
+@user_passes_test(is_staff_user)
+def admin_view_students_course(request):
+    course = models.Course.objects.all()
+    return render(request, 'quiz/admin_view_students_course.html', {'course': course})
 
 @login_required(login_url='adminlogin')
-def admin_view_marks_view(request, pk):
-    courses = models.Course.objects.all()
-    response = render(request, 'quiz/admin_view_marks.html', {'courses': courses})
-    response.set_cookie('student_id', str(pk))
+@user_passes_test(is_staff_user)
+def admin_view_classes_results(request, pk):
+    classes = models.Classes.objects.all()
+    response = render(request, 'quiz/admin_view_classes_results.html', {'classes': classes})
+    response.set_cookie('course_id', str(pk))
+    return response
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
+def download_students_results(request,classes_id):
+    # Students ro'yxatini olish (sizning tadbirlogikangizga qarab)
+    class_id = models.Classes.objects.filter(id=classes_id).first()
+    course_id = request.COOKIES.get('course_id')
+    selected_course = get_object_or_404(models.Course, pk=course_id)
+    course_name = selected_course.course_name
+    students = SMODEL.Student.objects.filter(classes=class_id)
+    wb = Workbook()
+    ws = wb.active
+
+    # Excel fayl ustunlarini qo'shish
+    ws.append(['Ism', 'Familiya', 'Kurs', 'Ball', 'Test bajarilgan vaqt', 'Sinf raqami'])
+
+    for student in students:
+        latest_result = models.Result.objects.filter(student=student,course=selected_course).order_by('-date').first()
+        if latest_result:
+            new_date = latest_result.date + timedelta(hours=5)
+
+            data = [
+                student.user.first_name,
+                student.user.last_name,
+                latest_result.course.course_name,
+                latest_result.marks,
+                new_date.strftime('%Y-%m-%d %H:%M:%S'),  # Besh soatni qo'shish
+                latest_result.classes.class_name,
+            ]
+
+            # Excel faylga qo'shish
+            ws.append(data)
+
+    # Excel faylni saqlash
+    filename = f'{class_id}_{course_name}_natijalar.xlsx'
+    wb.save(filename)
+
+    with open(filename, 'rb') as excel_file:
+        response = HttpResponse(excel_file.read(),
+                                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename={smart_str(filename)}'
+    if os.path.exists(filename):
+        os.remove(filename)
+
     return response
 
 
+
 @login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
 def admin_check_marks_view(request, pk):
     course = models.Course.objects.get(id=pk)
     student_id = request.COOKIES.get('student_id')
     student = SMODEL.Student.objects.get(id=student_id)
 
     results = models.Result.objects.all().filter(exam=course).filter(student=student)
-    return render(request, 'quiz/admin_check_marks.html', {'results': results})
+    return render(request, 'quiz/admin_update_course.html', {'results': results})
 
 
 def aboutus_view(request):
@@ -300,14 +363,14 @@ def contactus_view(request):
             name = sub.cleaned_data['Name']
             message = sub.cleaned_data['Message']
 
-            send_mail(str(f'Ismi: {name}') + ' || ' + str(f' Emaili: {email}'), message, settings.EMAIL_HOST_USER, [settings.ADMIN_EMAIL],
+            send_mail(str(f'Ismi: {name}') + ' || ' + str(f' Emaili: {email}'), message, settings.EMAIL_HOST_USER,
+                      [settings.ADMIN_EMAIL],
                       fail_silently=False)
             return render(request, 'quiz/contactussuccess.html')
     return render(request, 'quiz/contactus.html', {'form': sub})
 
 
 class QuestionUpdateViewAdmin(UpdateView):
-
     model = Question
     template_name = 'quiz/question_update.html'
     fields = ['marks', 'question', 'variant_A', 'variant_B', 'variant_C', 'variant_D', 'answer']
@@ -335,3 +398,42 @@ class QuestionUpdateViewTeacher(UpdateView):
         return reverse('see-question', kwargs={'class_id': self.object.classes.id})
 
 
+def clear_all_cookies(request):
+    # Foydalanuvchi (user) session ma'lumotlarini tozalash
+    request.session.flush()
+
+    # Barcha cookielarni o'chirish
+    response = redirect("/logout")  # Buni o'zingizga mos xabar qo'ying
+    for key in request.COOKIES:
+        # Bo'sh joylarni o'chirish
+        if key.strip():  # Bo'sh joylarni tekshirish
+            response.delete_cookie(key)
+
+    # Logout qilish
+    logout(request)
+
+    return response
+
+
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
+def admin_update_courses(request):
+    course = models.Course.objects.all()
+    return render(request, 'quiz/admin_update_course.html', {'course': course})
+
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
+def admin_update_click_course(request, pk):
+    course = get_object_or_404(models.Course, id=pk)
+
+    if request.method == 'POST':
+        form = forms.UpdateCourseForm(request.POST, instance=course)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/admin-update-courses')
+    else:
+        form = forms.UpdateCourseForm(instance=course)
+
+    return render(request, 'quiz/admin_update_click_course.html', {'form': form, 'course': course})

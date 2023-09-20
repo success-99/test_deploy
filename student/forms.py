@@ -64,8 +64,6 @@ class StudentUserForm(forms.ModelForm):
         return email
 
 
-
-
 class StudentForm(forms.ModelForm):
     classes = forms.ModelChoiceField(queryset=QMODEL.Classes.objects.all(), empty_label="Sinfni tanlash",
                                      to_field_name="id")

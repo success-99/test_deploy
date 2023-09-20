@@ -11,7 +11,6 @@ from student import models as SMODEL
 from quiz import forms as QFORM
 from teacher.models import Teacher
 from django.shortcuts import get_object_or_404
-from .forms import UpdateCourseForm, CombinedTeacherUpdateForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.views.generic import UpdateView
@@ -134,23 +133,44 @@ def tech_view_student_marks_view(request):
 def tech_classes_student_view(request, class_id):
     teacher = Teacher.objects.get(user=request.user)
     tech_course = teacher.course.course_name
+    tech_course_id = teacher.course.id
     selected_class = QMODEL.Classes.objects.get(pk=class_id)
     students = SMODEL.Student.objects.filter(classes=selected_class)
     student_count = students.count()
 
+    response = render(request, 'teacher/tech_classes_student_view.html', {
+        'selected_class': selected_class,
+        'students': students,
+        'course_name': tech_course,
+        'student_count': student_count,
+    })
+    response.set_cookie('class_id', class_id)
+    response.set_cookie('course_id', tech_course_id)
+
+    return response
+
+
+@login_required(login_url='teacherlogin')
+@user_passes_test(is_teacher)
+def download_student_results(request):
+    # Students ro'yxatini olish (sizning tadbirlogikangizga qarab)
+    class_id = request.COOKIES.get('class_id')
+    selected_class = get_object_or_404(QMODEL.Classes, pk=class_id)
+    course_id = request.COOKIES.get('course_id')
+    selected_course = get_object_or_404(QMODEL.Course, pk=course_id)
+    class_name = selected_class.class_name
+    course_name = selected_course.course_name
     students = SMODEL.Student.objects.filter(classes=selected_class)
     wb = Workbook()
     ws = wb.active
 
     # Excel fayl ustunlarini qo'shish
-    ws.append(['Ism', 'Familiya', 'Kurs', 'Ball', 'Test bajarilgan vaqt'])
+    ws.append(['Ism', 'Familiya', 'Kurs', 'Ball', 'Test bajarilgan vaqt', 'Sinf raqami'])
 
     for student in students:
-        # Har bir studentning oxirgi natijalarini olish
-        latest_result = QMODEL.Result.objects.filter(student=student).order_by('-date').first()
-
+        latest_result = QMODEL.Result.objects.filter(student=student,course=selected_course).order_by('-date').first()
         if latest_result:
-            new_date = latest_result.date + datetime.timedelta(hours=5)
+            new_date = latest_result.date + timedelta(hours=5)
 
             data = [
                 student.user.first_name,
@@ -158,30 +178,23 @@ def tech_classes_student_view(request, class_id):
                 latest_result.course.course_name,
                 latest_result.marks,
                 new_date.strftime('%Y-%m-%d %H:%M:%S'),  # Besh soatni qo'shish
+                latest_result.classes.class_name,
             ]
 
             # Excel faylga qo'shish
             ws.append(data)
 
     # Excel faylni saqlash
-    filename = f'student_{selected_class}_results_latest_date.xlsx'
+    filename = f'{class_name}_{course_name}_natijalar.xlsx'
     wb.save(filename)
 
-    context = {'selected_class': selected_class, 'students': students, 'course_name': tech_course,
-               'student_count': student_count, 'filename': filename}
-    return render(request, 'teacher/tech_classes_student_view.html', context)
-
-
-@login_required(login_url='teacherlogin')
-@user_passes_test(is_teacher)
-def download_student_results(request, filename):
     with open(filename, 'rb') as excel_file:
         response = HttpResponse(excel_file.read(),
                                 content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = f'attachment; filename={smart_str(filename)}'
+    if os.path.exists(filename):
+        os.remove(filename)
 
-        if os.path.exists(filename):
-            os.remove(filename)
     return response
 
 
@@ -201,7 +214,7 @@ def tech_view_class_student_date(request, student_id):
     tech_course_id = teacher.course.id
     student = get_object_or_404(SMODEL.Student, pk=student_id)
     classes = student.classes.id
-    results = QMODEL.Result.objects.filter(student=student, course=tech_course_id, classes=classes)
+    results = QMODEL.Result.objects.filter(student=student, course=tech_course_id, classes=classes).order_by('date')
     context = {'student': student, 'results': results}
     return render(request, 'teacher/tech_classes_student_date_view.html', context)
 
@@ -301,84 +314,46 @@ def tech_update_course(request):
     course = get_object_or_404(QMODEL.Course, id=course_id1)
 
     if request.method == 'POST':
-        form = UpdateCourseForm(request.POST, instance=course)
+        form = forms.UpdateCourseForm(request.POST, instance=course)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/teacher/teacher-dashboard')
     else:
-        form = UpdateCourseForm(instance=course)
+        form = forms.UpdateCourseForm(instance=course)
 
     return render(request, 'teacher/tech_update_course.html', {'form': form, 'course': course})
 
+@login_required(login_url='teacherlogin')
+@user_passes_test(is_teacher)
+def update_profile(request):
+    teacher = Teacher.objects.get(user=request.user)
+    user = User.objects.get(id=teacher.user_id)
+    userForm = forms.TeacherUserForm(instance=user)
+    # teacherForm = forms.TeacherUForm(instance=teacher)
+    initial_course = teacher.course.id if teacher.course else None
+    teacherForm = forms.TeacherUForm(instance=teacher, initial={'course': initial_course})
+    mydict = {'userForm': userForm, 'teacherForm': teacherForm}
+    if request.method == 'POST':
+        userForm = forms.TeacherUserForm(request.POST, instance=user)
+        teacherForm = forms.TeacherUForm(request.POST, instance=teacher)
+        if userForm.is_valid() and teacherForm.is_valid():
+            user = userForm.save()
+            user.set_password(user.password)
+            user.save()
+            teacherForm.save()
+            new_course = teacherForm.cleaned_data.get('course')
 
-# @login_required(login_url='teacherlogin')
-# @user_passes_test(is_teacher)
-# def teacher_update_profile(request):
-#     if request.method == 'POST':
-#         user_form = TeacherUserUpdateForm(request.POST)
-#         profile_form = TeacherUpdateForm(request.POST)
-#         if user_form.is_valid() and profile_form.is_valid():
-#             user = request.user
-#             user.first_name = user_form.cleaned_data['first_name']
-#             user.last_name = user_form.cleaned_data['last_name']
-#             user.email = user_form.cleaned_data['email']
-#             user.username = user_form.cleaned_data['username']
-#             user.save()
-#
-#             teacher = request.user.teacher
-#             teacher.mobile = profile_form.cleaned_data['mobile']
-#             teacher.save()
-#
-#             messages.success(request, 'Your profile is updated successfully')
-#             return redirect('/teacher/teacher-dashboard')
-#     else:
-#         user_form = TeacherUserUpdateForm(initial={
-#             'first_name': request.user.first_name,
-#             'last_name': request.user.last_name,
-#             'email': request.user.email,
-#             'username': request.user.username,
-#         })
-#         profile_form = TeacherUpdateForm(initial={
-#             'mobile': request.user.teacher.mobile,
-#         })
-#     return render(request, 'teacher/teacher_profile.html', {'user_form': user_form, 'profile_form': profile_form})
-#
-# class TeacherUpdateProfil(UpdateView):
-#     model = Teacher
-#     template_name = 'teacher/teacher_profile.html'
-#     fields = ['first_name', 'last_name', 'email', 'username', 'variant_B', 'variant_C', 'variant_D', 'answer']
-#
-#     success_url = '/teacher/teacher-view-question'
-#
-#     def form_valid(self, form):
-#         question = form.save(commit=False)
-#
-#         if question.teacher == self.request.user.pk:
-#             question.save()
-#             messages.success(self.request, 'Savol muvaffaqiyatli yangilandi!')
-#             return HttpResponseRedirect(self.get_success_url())
-#         return super().form_valid(form)
+            # Eski kursni olish
+            old_course = teacher.course
+
+            # Kurs o'zgarmagan bo'lsa va yangi kurs tanlangan bo'lsa
+            if old_course != new_course and new_course is not None:
+                teacher.course = new_course
+                teacher.status = False  # statusni "False" qilamiz
+
+            teacherForm.save()
+            return redirect('/teacher/teacherlogin')
+
+    return render(request, 'teacher/teacher_profile.html', context=mydict)
 
 
-# class TeacherProfileUpdateView(UpdateView):
-#     model = Teacher
-#     template_name = 'teacher/teacher_profile.html'
-#     form_class = TeacherUpdateForm
-#     success_url = '/teacher/teacher-dashboard'
-#
-#     def get_object(self, queryset=None):
-#         return self.request.user.teacher
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['user_form'] = TeacherUserUpdateForm()
-#         return context
-
-class TeacherProfileUpdateView(UpdateView):
-    model = User
-    template_name = 'teacher/teacher_profile.html'
-    form_class = CombinedTeacherUpdateForm  # Yangi birlashtirilgan form
-    success_url = '/teacher/teacher-dashboard'
-
-    def get_object(self, queryset=None):
-        return self.request.user.teacher

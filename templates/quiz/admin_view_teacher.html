@@ -47,7 +47,7 @@
         <td>{{t.course}}</td>
         
         <td><a class="btn btn-primary btn-xs" href="{% url 'update-teacher' t.id  %}"><span class="glyphicon glyphicon-edit"></span></a></td>
-        <td><a class="btn btn-danger btn-xs" href="{% url 'delete-teacher' t.id  %}"><span class="glyphicon glyphicon-trash"></span></a></td>
+        <td><a class="btn btn-danger btn-xs" href="{% url 'delete-teacher' t.id  %}" onclick="return confirm('Ishonchingiz komilmi?')"><span class="glyphicon glyphicon-trash"></span></a></td>
       </tr>
       {% endfor %}
     </table>

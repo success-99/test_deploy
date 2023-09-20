@@ -3,4 +3,6 @@ from .models import Teacher
 # Register your models here.
 
 
-admin.site.register(Teacher)
+@admin.register(Teacher)
+class AuthorTeacher(admin.ModelAdmin):
+    list_display = ['course']

@@ -52,3 +52,13 @@ class QuestionForm(forms.ModelForm):
         if len(options) != len(set(options)):
             raise forms.ValidationError('Variantlar bir biriga teng bo\'lishi mumkin emas!')
 
+
+class UpdateCourseForm(forms.ModelForm):
+    class Meta:
+        model = models.Course
+        fields = ['question_number', 'total_marks', 'status']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Adding class to the status field to style it as a toggle switch
+        self.fields['status'].widget.attrs.update({'class': 'toggle-switch'})

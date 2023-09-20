@@ -42,6 +42,8 @@ urlpatterns = [
                   path('', views.home_view, name=''),
                   path('__debug__/', include('debug_toolbar.urls')),
                   path('logout', LogoutView.as_view(template_name='quiz/logout.html'), name='logout'),
+                  path('clear-cookies', views.clear_all_cookies, name='clear_cookies'),  # Cookielardagi barcha ma'lumotlarni o'chirish
+
                   path('aboutus', views.aboutus_view),
                   path('contactus', views.contactus_view),
                   path('afterlogin', views.afterlogin_view, name='afterlogin'),
@@ -62,9 +64,11 @@ urlpatterns = [
 
                   path('admin-student', views.admin_student_view, name='admin-student'),
                   path('admin-view-student', views.admin_view_student_view, name='admin-view-student'),
-                  path('admin-view-student-marks', views.admin_view_student_marks_view,
-                       name='admin-view-student-marks'),
-                  path('admin-view-marks/<uuid:pk>', views.admin_view_marks_view, name='admin-view-marks'),
+                  path('admin-view-students-course', views.admin_view_students_course,
+                       name='admin-view-students-course'),
+                  path('admin-view-classes-results/<uuid:pk>', views.admin_view_classes_results, name='admin-view-classes-results'),
+                  path('download-students-results/<uuid:classes_id>', views.download_students_results, name='download-students-results'),
+
                   path('admin-check-marks/<uuid:pk>', views.admin_check_marks_view, name='admin-check-marks'),
                   path('update-student/<uuid:pk>', views.update_student_view, name='update-student'),
                   path('delete-student/<uuid:pk>', views.delete_student_view, name='delete-student'),
@@ -72,17 +76,24 @@ urlpatterns = [
                   path('admin-course', views.admin_course_view, name='admin-course'),
                   path('admin-add-course', views.admin_add_course_view, name='admin-add-course'),
                   path('admin-view-course', views.admin_view_course_view, name='admin-view-course'),
+                  path('admin-update-courses', views.admin_update_courses, name='admin-update-courses'),
+                  path('admin-update-click-course/<uuid:pk>', views.admin_update_click_course, name='admin-update-click-course'),
                   path('delete-course/<uuid:pk>', views.delete_course_view, name='delete-course'),
 
                   path('admin-question', views.admin_question_view, name='admin-question'),
-                  path('admin-add-question', views.admin_add_question_view, name='admin-add-question'),
                   path('admin-view-question', views.admin_view_question_view, name='admin-view-question'),
                   path('view-question/<uuid:pk>', views.view_question_view, name='view-question'),
                   path('update-question/<uuid:pk>', QuestionUpdateViewAdmin.as_view(), name='update-question-admin'),
                   path('update-question/teacher/<uuid:pk>', QuestionUpdateViewTeacher.as_view(), name='update-question-teacher'),
-                  path('delete-question/<uuid:pk>', views.delete_question_view, name='delete-question'),
 
 ]
+
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+handler404 = 'quiz.views.handling_404'
+handler500 = 'quiz.views.handling_500'
+
+

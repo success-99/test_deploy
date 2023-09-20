@@ -25,24 +25,26 @@
 <div class="container">
   <div class="panel panel-primary">
     <div class="panel-heading">
-      <h6 class="panel-title">Fanlar</h6>
+      <h6 class="panel-title">Sinflar kesimida</h6>
     </div>
     <table class="table table-hover" id="dev-table">
       <thead>
         <tr>
 
-          <th>Fan nomi</th>
+          <th>Sinf raqami</th>
           
-          <th>Ballarni ko'rish</th>
+          <th>Yuklash</th>
+          <th> </th>
         </tr>
       </thead>
-      {% for t in courses %}
+      {% for cl in classes %}
       <tr>
 
-        <td> {{t.course_name}}</td>
+        <td> {{cl.class_name}}</td>
         
         
-        <td><a class="btn btn-danger btn-xs" href="{% url 'admin-check-marks' t.id  %}"><span class="glyphicon glyphicon-eye-open"></span></a></td>
+        <td><a class="btn btn-danger btn-xs" href="{% url 'download-students-results' cl.id %}" onclick="this.style.pointerEvents='none'; this.innerHTML='<strong>Yuklandi!</strong> ';"><span class="glyphicon glyphicon-save"></span></a></td>
+        <th> </th>
       </tr>
       {% endfor %}
     </table>

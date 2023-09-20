@@ -5,7 +5,6 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from ckeditor_uploader import views as ckeditor_views
 
-from teacher.views import TeacherProfileUpdateView
 
 
 urlpatterns = [
@@ -15,7 +14,7 @@ urlpatterns = [
     path('teacher-dashboard', views.teacher_dashboard_view, name='teacher-dashboard'),
     path('teacher-class', views.teacher_class_view, name='teacher-class'),
     path('teacher-view-class-student/<uuid:class_id>', views.tech_classes_student_view, name='teacher-classes-student'),
-    path('download_student_results/<str:filename>/', views.download_student_results, name='download_student_results'),
+    path('download_student_results', views.download_student_results, name='download_student_results'),
     path('teacher-view-class-student-date/<uuid:student_id>', views.tech_view_class_student_date, name='teacher-view-class-student-date'),
     path('teacher-student-result-view/<uuid:result_id>', views.teacher_student_result_view, name='teacher-student-result'),
 
@@ -23,7 +22,7 @@ urlpatterns = [
     path('teacher-view-exam', views.teacher_view_exam_view, name='teacher-view-exam'),
     path('delete-exam/<uuid:pk>', views.delete_exam_view, name='delete-exam'),
 
-    path('teacher-profile', TeacherProfileUpdateView.as_view(), name='teacher-profile'),
+    path('teacher-update-profile', views.update_profile, name='teacher-update-profile'),
     path('teacher-view-student-marks', views.tech_view_student_marks_view, name='teacher-view-student-marks'),
     # path('teacher-view-marks/<uuid:pk>', views.tech_view_marks_view, name='teacher-view-marks'),
     # path('teacher-check-marks/<uuid:pk>', views.tech_check_marks_view, name='teacher-check-marks'),

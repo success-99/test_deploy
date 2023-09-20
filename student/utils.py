@@ -75,16 +75,16 @@ import django
 #     django.setup()
 #     media_root = settings.MEDIA_ROOT
 #     print(media_root)
-#     images = []
+#     image = []
 #
 #     # Get a list of uploaded image files
 #     for root, dirs, files in os.walk(os.path.join(media_root, upload_dir)):
 #         for file in files:
 #             if file.lower().endswith('.png', '.jpg'):
-#                 images.append(os.path.join(root, file))
+#                 image.append(os.path.join(root, file))
 #
 #     # Delete the image files
-#     for image in images:
+#     for image in image:
 #         default_storage.delete(image)
 #
 # # Bu funksiyani qo'shing va upload_dir o'zgaruvchisini uzating
@@ -102,19 +102,19 @@ import django
 #     settings.configure()
 #     media_root = settings.MEDIA_ROOT
 #     upload_dir = settings.CKEDITOR_UPLOAD_PATH
-#     images = []
+#     image = []
 #
 #     # Get a list of uploaded image files
 #     for root, dirs, files in os.walk(os.path.join(media_root, upload_dir)):
 #         for file in files:
 #             if file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.svg')):
-#                 images.append(os.path.join(root, file))
+#                 image.append(os.path.join(root, file))
 #
 #     # Delete the image files
-#     for image in images:
+#     for image in image:
 #         default_storage.delete(image)
 #
-# # Call the function to delete uploaded images
+# # Call the function to delete uploaded image
 # delete_uploaded_images()
 # import pandas as pd
 # from openpyxl import Workbook

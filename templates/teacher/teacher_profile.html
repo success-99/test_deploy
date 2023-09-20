@@ -1,93 +1,126 @@
 {% extends 'teacher/teacherbase.html' %}
 {% load widget_tweaks %}
 {% block content %}
-<head>
-  <style media="screen">
-    input[type=text], select,input[type=number] ,input[type=password], textarea{
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
+<head xmlns="http://www.w3.org/1999/html">
+<meta charset="utf-8">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-  input[type=submit] {
-    width: 100%;
-    background-color: #4CAF50;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
+  <style>
+  a:link {
+        text-decoration: none;
+      }
+      .form-container {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-  input[type=submit]:hover {
-    background-color: #45a049;
-  }
+    /* Bu qator orqali tugma ko'rinishini o'zgartirishingiz mumkin */
+    .submit-button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 
+    .submit-button:hover {
+        background-color: #0056b3;
+    }
 
   </style>
-
-
 </head>
+<body>
 
-<br><br>
+
+
+  <center>
 <h3 style="text-align:center;">O'qituvchi ma'lumotlarini yangilash</h3>
-<div class="container mt-5">
-  <form method="post" enctype="multipart/form-data" style="margin-left: 200px; margin-right: 200px;">
-    {% csrf_token %}
+      <h5 style="text-align:center; color:blue;">Yangilash uchun majburiy deyilgan fildlarni o'zgartiring!</h5>
+      <br>
 
+  <form method="post"  autocomplete="off" enctype="multipart/form-data" style="margin-left:200px;margin-right:200px;">
+      {% csrf_token %}
     <div class="form-group">
-      <label for="{{ form.first_name.id_for_label }}">First Name</label>
-      {{ form.first_name }}
-      {% if form.first_name.errors %}
-      <p class="text-danger">{{ form.first_name.errors }}</p>
-      {% endif %}
-    </div>
+        <div class="form-group col-md-6">
+            <label for="username">Foydalanuvchi nomi(majburiy)</label>
+            {% render_field userForm.username|attr:'required:true'  class="form-control" placeholder="username" %}
+        </div>
+        <div class="form-group col-md-6">
+            <label for="first_name">Ismingiz</label>
+            {% render_field userForm.first_name|attr:'required:true'  class="form-control" placeholder="ism" %}
+        </div>
 
-    <div class="form-group">
-      <label for="{{ form.last_name.id_for_label }}">Last Name</label>
-      {{ form.last_name }}
-      {% if form.last_name.errors %}
-      <p class="text-danger">{{ form.last_name.errors }}</p>
-      {% endif %}
-    </div>
 
-    <div class="form-group">
-      <label for="{{ form.username.id_for_label }}">Username</label>
-      {{ form.username }}
-      {% if form.username.errors %}
-      <p class="text-danger">{{ form.username.errors }}</p>
-      {% endif %}
-    </div>
+        <div class="form-group col-md-6">
+           <label for="last_name">Familiya</label>
+           {% render_field userForm.last_name|attr:'required:true'  class="form-control" placeholder="familiya" %}
+        </div>
 
-    <div class="form-group">
-      <label for="{{ form.email.id_for_label }}">Email Address</label>
-      {{ form.email }}
-      {% if form.email.errors %}
-      <p class="text-danger">{{ form.email.errors }}</p>
-      {% endif %}
-    </div>
+      <div class="form-group col-md-6">
+        <label for="email">Email(majburiy)</label>
+        {% render_field userForm.email|attr:'required:true'  class="form-control" placeholder="email" %}
+     </div><br>
 
-    <div class="form-group">
-      <label for="{{ form.mobile.id_for_label }}">Mobile</label>
-      {{ form.mobile }}
-      {% if form.mobile.errors %}
-      <p class="text-danger">{{ form.mobile.errors }}</p>
-      {% endif %}
-    </div>
+      <div class="form-group col-md-6">
+        <label for="password">Parol(majburiy)</label>
+        {% render_field userForm.password|attr:'required:true'  class="form-control" placeholder="parol" %}
+      </div>
 
-    <!-- Qolgan bo'lgan fildlarni ham shu shaklda qo'shishingiz mumkin -->
+      <div class="form-group col-md-6">
+        <label for="con_password">Parolni qayta kiriting(majburiy)</label>
+        {% render_field userForm.con_password|attr:'required:true'  class="form-control" placeholder="parol" %}
+     </div>
+     <div class="form-group col-md-6">
+        <label for="mobile">Telefon raqam(majburiy)</label>
+        {% render_field teacherForm.mobile|attr:'required:true'  class="form-control" placeholder="Nomer" %}
+     </div>
+     <div class="form-group col-md-6">
+        <label for="fan">Faningiz</label>
+        {% render_field teacherForm.course|attr:'required:true'  class="form-control"%}
+     </div>
+        <br>
+        <input type="submit" class="btn btn-primary" value="Yangilash">
 
-    <br><br>
-    <input type="submit" value="Yangilash" class="btn btn-primary">
-  </form>
+   {% if userForm.errors %}
+<div class="alert alert-danger mt-3">
+    <strong>Xatoliklar (foydalanuvchi):</strong>
+    <ul>
+        {% for field in userForm %}
+        {% for error in field.errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+        {% endfor %}
+    </ul>
 </div>
+{% endif %}
+
+    <!-- Display validation errors for studentForm -->
+    {% if teacherForm.errors %}
+    <div class="alert alert-danger mt-3">
+        <strong>Xatoliklar (teacher):</strong>
+        <ul>
+            {% for field in teacherForm %}
+            {% for error in field.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+      </div>
+  </form>
+ </center>
+</body>
 
 
 
-<br><br><br><br><br><br><br><br>
 {% endblock content %}

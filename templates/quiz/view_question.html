@@ -32,26 +32,24 @@
         <tr>
 
           <th>Savol</th>
-         
           <th>Ball</th>
-          <th>Savolni yangilash</th>
-          <th>Savolni o'chirish</th>
+          <th>Sinf raqami</th>
+          <th>Savollarni ko'zdan kechirish</th>
         </tr>
       </thead>
       {% for c in questions %}
       <tr>
 
         <td> {{c.question|safe}}</td>
-        
         <td>{{c.marks}}</td>
-        <td><a class="btn btn-primary btn-xs" href="{% url 'update-question-admin' c.id  %}"><span class="glyphicon glyphicon-edit"></span></a></td>
-        <td><a class="btn btn-primary btn-xs" href="{% url 'delete-question' c.id  %}"><span class="glyphicon glyphicon-trash"></span></a></td>
-        
+        <td>{{c.classes}}</td>
+        <td><a class="btn btn-primary btn-xs" href="{% url 'update-question-admin' c.id  %}"><span class="glyphicon glyphicon-eye-open"></span></a></td>
+
       </tr>
       {% endfor %}
     </table>
   </div>
 </div>
 
-<br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br>
 {% endblock content %}

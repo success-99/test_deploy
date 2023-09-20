@@ -53,7 +53,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -92,11 +92,7 @@ SWAGGER_SETTINGS = {
         'Basic': {
             'type': 'basic'
         },
-        #  'Bearer': {
-        #       'type': 'apiKey',
-        #       'name': 'Authorization',
-        #       'in': 'header'
-        # }
+
     }
 }
 
@@ -154,7 +150,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
-MEDIA_ROOT = os.environ.get('MEDIA_ROOT',os.path.join(BASE_DIR, 'media'))
+MEDIA_ROOT = os.environ.get('MEDIA_ROOT', os.path.join(BASE_DIR, 'media'))
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "staticfile")]
@@ -184,13 +180,11 @@ CKEDITOR_CONFIGS = {
   'default': {
       'height': 150,
       'width': 970,
-      # 'removePlugins': 'stylesheetparser',
-      'filebrowserImageThumbWidth': 0,
-      'filebrowserImageThumbHeight': 0,
-      # 'allowedContent': True,
+      'removePlugins': 'stylesheetparser',
+      'allowedContent': True,
   },
 }
-# CKEDITOR_ALLOW_NONIMAGE_FILES = False
+CKEDITOR_ALLOW_NONIMAGE_FILES = False
 
 
 INTERNAL_IPS = [
