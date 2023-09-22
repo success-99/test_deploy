@@ -104,6 +104,7 @@ def start_exam_view(request, pk):
         return response
 
     if request.method == 'POST':
+        print(request)
         pass
     response = render(request, 'student/start_exam.html', {'course': course, 'questions': questions})
     if request.COOKIES.get('course_id') is None:

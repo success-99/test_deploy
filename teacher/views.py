@@ -16,7 +16,6 @@ from django.contrib import messages
 from django.views.generic import UpdateView
 import os
 from bs4 import BeautifulSoup
-import pandas as pd
 from openpyxl import Workbook
 import datetime
 from django.http import HttpResponse
