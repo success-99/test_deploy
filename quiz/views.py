@@ -292,7 +292,8 @@ def admin_view_students_course(request):
 @user_passes_test(is_staff_user)
 def admin_view_classes_results(request, pk):
     classes = models.Classes.objects.all()
-    response = render(request, 'quiz/admin_view_classes_results.html', {'classes': classes})
+    course = models.Course.objects.get(id=pk)
+    response = render(request, 'quiz/admin_view_classes_results.html', {'classes': classes, 'course': course})
     response.set_cookie('course_id', str(pk))
     return response
 

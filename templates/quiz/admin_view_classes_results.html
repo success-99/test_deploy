@@ -25,7 +25,10 @@
 <div class="container">
   <div class="panel panel-primary">
     <div class="panel-heading">
-      <h6 class="panel-title">Sinflar kesimida</h6>
+      <a class="btn btn-primary btn-xs custom-margin-left" href="#" id="back-button">
+        <span class="glyphicon glyphicon-circle-arrow-left"></span> Ortga qaytish
+      </a>
+      <h6 class="panel-title">{{course}} fanidan. Sinflar kesimida natijalar.</h6>
     </div>
     <table class="table table-hover" id="dev-table">
       <thead>
@@ -52,4 +55,9 @@
 </div>
 
 <br><br><br><br><br><br>
+<script>
+    document.getElementById("back-button").addEventListener("click", function () {
+        window.history.back();
+    });
+</script>
 {% endblock content %}
