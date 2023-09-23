@@ -150,13 +150,6 @@ def calculate_marks_view(request):
 
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
-def view_result_view(request):
-    courses = QMODEL.Course.objects.all()
-    return render(request, 'student/view_result.html', {'courses': courses})
-
-
-@login_required(login_url='studentlogin')
-@user_passes_test(is_student)
 def check_marks_view(request, pk):
     course = QMODEL.Course.objects.get(id=pk)
     course_t_m = course.total_marks
