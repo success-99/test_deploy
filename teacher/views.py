@@ -1,11 +1,10 @@
-from django.shortcuts import render, redirect, reverse
-from . import forms, models
-from django.db.models import Sum
+from django.shortcuts import render, redirect
+from . import forms
 from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.conf import settings
-from datetime import date, timedelta
+from datetime import timedelta
 from quiz import models as QMODEL
 from student import models as SMODEL
 from quiz import forms as QFORM
@@ -13,15 +12,13 @@ from teacher.models import Teacher
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.views.generic import UpdateView
 import os
 from bs4 import BeautifulSoup
 from openpyxl import Workbook
-import datetime
 from django.http import HttpResponse
 from django.utils.encoding import smart_str
-import time
 from student.forms import StudentClassUpdateForm
+
 
 # for showing signup/login button for teacher
 def teacherclick_view(request):
@@ -159,7 +156,7 @@ def download_student_results(request):
     ws.append(['Ism', 'Familiya', 'Kurs', 'Ball', 'Test bajarilgan vaqt', 'Sinf raqami'])
 
     for student in students:
-        latest_result = QMODEL.Result.objects.filter(student=student,course=selected_course).order_by('-date').first()
+        latest_result = QMODEL.Result.objects.filter(student=student, course=selected_course).order_by('-date').first()
         if latest_result:
             new_date = latest_result.date + timedelta(hours=5)
 
@@ -314,6 +311,7 @@ def tech_update_course(request):
 
     return render(request, 'teacher/tech_update_course.html', {'form': form, 'course': course})
 
+
 @login_required(login_url='teacherlogin')
 @user_passes_test(is_teacher)
 def update_profile(request):
@@ -355,7 +353,8 @@ def student_class_update(request, student_id):
         form = StudentClassUpdateForm(request.POST, instance=student)
         if form.is_valid():
             form.save()
-            return redirect('teacher-classes-student', class_id=classid)  # O'zgartirilgan studentni ko'rsatish uchun mos manzil
+            return redirect('teacher-classes-student',
+                            class_id=classid)  # O'zgartirilgan studentni ko'rsatish uchun mos manzil
     else:
         form = StudentClassUpdateForm(instance=student)
 

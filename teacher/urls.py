@@ -1,10 +1,6 @@
-from django.urls import path,include
+from django.urls import path
 from teacher import views
 from django.contrib.auth.views import LoginView
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.cache import never_cache
-from ckeditor_uploader import views as ckeditor_views
-
 
 
 urlpatterns = [
@@ -15,8 +11,10 @@ urlpatterns = [
     path('teacher-class', views.teacher_class_view, name='teacher-class'),
     path('teacher-view-class-student/<uuid:class_id>', views.tech_classes_student_view, name='teacher-classes-student'),
     path('download_student_results', views.download_student_results, name='download_student_results'),
-    path('teacher-view-class-student-date/<uuid:student_id>', views.tech_view_class_student_date, name='teacher-view-class-student-date'),
-    path('teacher-student-result-view/<uuid:result_id>', views.teacher_student_result_view, name='teacher-student-result'),
+    path('teacher-view-class-student-date/<uuid:student_id>', views.tech_view_class_student_date,
+         name='teacher-view-class-student-date'),
+    path('teacher-student-result-view/<uuid:result_id>', views.teacher_student_result_view,
+         name='teacher-student-result'),
 
     path('teacher-add-exam', views.teacher_add_exam_view, name='teacher-add-exam'),
     path('teacher-view-exam', views.teacher_view_exam_view, name='teacher-view-exam'),
