@@ -49,7 +49,15 @@
       {% endfor %}
     </table>
   </div>
+  <a id="clear-cache-button" class="btn btn-primary btn-xs" href="{% url 'delete-cache-img' %}" onclick="clearCache(); this.style.pointerEvents='none'; this.innerHTML='<strong>Kesh tozalandi!</strong>'; return false;"><span class="glyphicon glyphicon glyphicon-trash"> <strong>Kesh rasmlarni o'chirish</strong></span></a>
 </div>
 
 <br><br><br><br><br><br><br><br><br><br>
+<script>
+function clearCache() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '{% url "delete-cache-img" %}', true);
+    xhr.send();
+}
+</script>
 {% endblock content %}

@@ -27,11 +27,14 @@ from django.contrib.auth import logout
 from openpyxl import Workbook
 from django.utils.encoding import smart_str
 
-def handling_404(request,exception):
+
+def handling_404(request, exception):
     return render(request, '404.html', {})
+
 
 def handling_500(request):
     return render(request, '500.html')
+
 
 def home_view(request):
     if request.user.is_authenticated:
@@ -284,6 +287,7 @@ def admin_view_students_course(request):
     course = models.Course.objects.all()
     return render(request, 'quiz/admin_view_students_course.html', {'course': course})
 
+
 @login_required(login_url='adminlogin')
 @user_passes_test(is_staff_user)
 def admin_view_classes_results(request, pk):
@@ -292,9 +296,10 @@ def admin_view_classes_results(request, pk):
     response.set_cookie('course_id', str(pk))
     return response
 
+
 @login_required(login_url='adminlogin')
 @user_passes_test(is_staff_user)
-def download_students_results(request,classes_id):
+def download_students_results(request, classes_id):
     # Students ro'yxatini olish (sizning tadbirlogikangizga qarab)
     class_id = models.Classes.objects.filter(id=classes_id).first()
     course_id = request.COOKIES.get('course_id')
@@ -308,7 +313,7 @@ def download_students_results(request,classes_id):
     ws.append(['Ism', 'Familiya', 'Kurs', 'Ball', 'Test bajarilgan vaqt', 'Sinf raqami'])
 
     for student in students:
-        latest_result = models.Result.objects.filter(student=student,course=selected_course).order_by('-date').first()
+        latest_result = models.Result.objects.filter(student=student, course=selected_course).order_by('-date').first()
         if latest_result:
             new_date = latest_result.date + timedelta(hours=5)
 
@@ -336,7 +341,6 @@ def download_students_results(request,classes_id):
         os.remove(filename)
 
     return response
-
 
 
 @login_required(login_url='adminlogin')
@@ -415,7 +419,6 @@ def clear_all_cookies(request):
     return response
 
 
-
 @login_required(login_url='adminlogin')
 @user_passes_test(is_staff_user)
 def admin_update_courses(request):
@@ -437,3 +440,73 @@ def admin_update_click_course(request, pk):
         form = forms.UpdateCourseForm(instance=course)
 
     return render(request, 'quiz/admin_update_click_course.html', {'form': form, 'course': course})
+
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
+def delete_cache_img(request):
+    questions = Question.objects.all()
+
+    # Barcha rasmlarni URL'larini saqlayacak bo'sh ro'yxat
+    image_Question_urls = []
+
+    # Har bir savol obyektini tekshirish
+    for question in questions:
+        # Savolni olish
+        question_text = question.question
+
+        # Variantlarni olish
+        variants = [getattr(question, f"{choice[0]}") for choice in question.cat]
+
+        # Barcha matnni tekshirish
+        all_texts = [question_text] + variants
+
+        # Har bir matnda img tegini qidirish
+        for text in all_texts:
+            if '<img' in text:
+                # img tegi topildi, uning manzilini chiqarib olish
+                start_index = text.find('src="') + 5
+                end_index = text.find('"', start_index)
+                img_url = text[start_index:end_index]
+
+                # Manzilni ro'yxatga qo'shish
+                image_Question_urls.append(img_url)
+    # Natijani ko'rish
+    media_root = settings.MEDIA_ROOT
+
+    # Uploads papkasining manzili
+    uploads_dir = os.path.join(media_root, 'uploads')
+
+    # Uploads papkasidagi barcha rasmlarni o'qib olish
+    all_images = os.listdir(uploads_dir)
+
+    # Barcha rasmlarning URL'larini saqlayacak bo'sh ro'yxatlar
+    image_Uploads_urls = []
+
+    # Barcha rasmlar manzillarini uploads papkasining manziliga qarab to'plang
+    for image in all_images:
+        image_url = os.path.join('/media/uploads', image)
+        image_Uploads_urls.append(image_url)
+    # Quyidagi ro'yxatlar o'chirish uchun ma'lumotlar bazasidagi va uploads papkasidagi rasmlarni saqlayadigan ro'yxatlar
+    images_to_delete = []
+    # image_Uploads_urls va image_Question_urls ni solishtirish va o'chirish uchun images_to_delete ni to'plash
+    for uploads_url in image_Uploads_urls:
+        if uploads_url not in image_Question_urls:
+            images_to_delete.append(uploads_url)
+    # images_to_delete ro'yxatidagi URL'larga ega rasmlarni o'chirish
+    if not images_to_delete:
+        mes = "Begona rasmlar yo'q"
+        print(mes)
+    else:
+        for delete_url in images_to_delete:
+            img_url = delete_url[15:]
+            full_img_path = os.path.join(settings.MEDIA_ROOT, 'uploads', img_url)
+            try:
+                if os.path.exists(full_img_path):
+                    os.remove(full_img_path)
+                else:
+                    print("Begona rasmlar o'chirilgan!")
+            except Exception as e:
+                messages.error(request, f"Xatolik: {str(e)}")
+
+    return HttpResponseRedirect(reverse('admin-view-question'))

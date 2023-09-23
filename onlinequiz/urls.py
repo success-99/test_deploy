@@ -86,6 +86,8 @@ urlpatterns = [
                   path('update-question/<uuid:pk>', QuestionUpdateViewAdmin.as_view(), name='update-question-admin'),
                   path('update-question/teacher/<uuid:pk>', QuestionUpdateViewTeacher.as_view(), name='update-question-teacher'),
 
+                  path('delete-cache-img', views.delete_cache_img, name='delete-cache-img'),
+
 ]
 
 if settings.DEBUG:

@@ -24,8 +24,6 @@ urlpatterns = [
 
     path('teacher-update-profile', views.update_profile, name='teacher-update-profile'),
     path('teacher-view-student-marks', views.tech_view_student_marks_view, name='teacher-view-student-marks'),
-    # path('teacher-view-marks/<uuid:pk>', views.tech_view_marks_view, name='teacher-view-marks'),
-    # path('teacher-check-marks/<uuid:pk>', views.tech_check_marks_view, name='teacher-check-marks'),
 
     path('teacher-question', views.teacher_question_view, name='teacher-question'),
     path('teacher-add-question', views.teacher_add_question_view, name='teacher-add-question'),
@@ -35,5 +33,6 @@ urlpatterns = [
     path('remove-result/<uuid:pk>', views.remove_result_view, name='remove-result'),
 
     path('update-course', views.tech_update_course, name='update-course'),
+    path('student-class-update/<uuid:student_id>', views.student_class_update, name='student-class-update'),
 
 ]

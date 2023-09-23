@@ -21,7 +21,7 @@ import datetime
 from django.http import HttpResponse
 from django.utils.encoding import smart_str
 import time
-
+from student.forms import StudentClassUpdateForm
 
 # for showing signup/login button for teacher
 def teacherclick_view(request):
@@ -63,11 +63,12 @@ def is_teacher(user):
 def teacher_dashboard_view(request):
     user = request.user
     teacher = Teacher.objects.get(user=user)
+
     dict = {
 
         'teacher_course': teacher.course.course_name,
         'total_course': QMODEL.Course.objects.all().count(),
-        'total_question': QMODEL.Question.objects.all().count(),
+        'total_question': QMODEL.Question.objects.filter(teacher=teacher).count(),
         'total_student': SMODEL.Student.objects.all().count()
     }
     return render(request, 'teacher/teacher_dashboard.html', context=dict)
@@ -116,15 +117,6 @@ def delete_exam_view(request, pk):
 def tech_view_student_marks_view(request):
     students = SMODEL.Student.objects.all()
     return render(request, 'teacher/tech_view_student_marks.html', {'students': students})
-
-
-#
-# @login_required(login_url='teacherlogin')
-# def tech_view_marks_view(request, pk):
-#     courses = QMODEL.Course.objects.all()
-#     response = render(request, 'teacher/tech_view_marks.html', {'courses': courses})
-#     response.set_cookie('student_id', str(pk))
-#     return response
 
 
 @login_required(login_url='teacherlogin')
@@ -356,3 +348,15 @@ def update_profile(request):
     return render(request, 'teacher/teacher_profile.html', context=mydict)
 
 
+def student_class_update(request, student_id):
+    student = get_object_or_404(SMODEL.Student, id=student_id)
+    classid = request.COOKIES.get('class_id')
+    if request.method == 'POST':
+        form = StudentClassUpdateForm(request.POST, instance=student)
+        if form.is_valid():
+            form.save()
+            return redirect('teacher-classes-student', class_id=classid)  # O'zgartirilgan studentni ko'rsatish uchun mos manzil
+    else:
+        form = StudentClassUpdateForm(instance=student)
+
+    return render(request, 'student/student_class_update.html', {'form': form, 'student': student})

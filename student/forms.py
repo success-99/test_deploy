@@ -83,3 +83,12 @@ class StudentForm(forms.ModelForm):
         if not mobile.isdigit():
             raise forms.ValidationError("Telefon raqam faqat sonlardan iborat bo'lishi kerak!")
         return mobile
+
+
+class StudentClassUpdateForm(forms.ModelForm):
+    classes = forms.ModelChoiceField(queryset=QMODEL.Classes.objects.all(), empty_label="Sinfni tanlash",
+                                     to_field_name="id")
+
+    class Meta:
+        model = models.Student
+        fields = ['classes']
