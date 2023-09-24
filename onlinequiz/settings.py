@@ -1,22 +1,23 @@
 import os
-from environs import Env
+import environ
+from pathlib import Path
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
 
 # environs kutubxonasidan foydalanish
-env = Env()
-env.read_env()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
+BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '@k0#p3kidu)yaaa3u1hplxz)f@^6xiy384*(+n@@s5x#1bx@m5'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = ["*"]
 
@@ -104,11 +105,11 @@ WSGI_APPLICATION = 'onlinequiz.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'onlinetestschool1',
-        'HOST': '0.0.0.0',
+        'NAME': env('DB_NAME'),
+        'HOST': env('DB_HOST'),
         'PORT': '5432',
-        'USER': 'postgres',
-        'PASSWORD': '9009',
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD')
 
     }
 }
@@ -166,11 +167,11 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'schoolverifcod@gmail.com'  # this email will be used to send emails
-EMAIL_HOST_PASSWORD = 'kbhweforydnqluxs'
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')  # this email will be used to send emails
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
-DEFAULT_FROM_EMAIL = 'shaxobiddina20@gmail.com'  # Your email address
-ADMIN_EMAIL = 'abdusalomovshaxobiddin2@gmail.com'  #
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')  # Your email address
+ADMIN_EMAIL = env('ADMIN_EMAIL')  #
 
 
 CKEDITOR_RESTRICT_BY_DATE = False
