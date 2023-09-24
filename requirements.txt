@@ -49,4 +49,4 @@ urllib3==1.26.14
 environs==9.5.0
 django-debug-toolbar==4.2.0
 beautifulsoup4==4.12.2
-psycopg2-binary==2.9.2
+psycopg2-binary
