@@ -1,23 +1,25 @@
 import os
-import environ
-from pathlib import Path
+# import environ
+from environs import Env
 
-env = environ.Env(
-    # set casting, default value
-    DEBUG=(bool, False)
-)
+from pathlib import Path
+env = Env()
+env.read_env()
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+# env = environ.Env()
 
 # environs kutubxonasidan foydalanish
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = Path(__file__).resolve().parent.parent
+# BASE_DIR = Path(__file__).resolve().parent.parent
 
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+# environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env.str("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
+DEBUG = env.str("DEBUG")
 
 ALLOWED_HOSTS = ["*"]
 
@@ -149,15 +151,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 
-MEDIA_ROOT = 'media'
+# MEDIA_ROOT = 'media'
+MEDIA_ROOT = str(BASE_DIR.joinpath("media"))
 MEDIA_URL = '/media/'
 
 STATIC_URL = '/static/'
-STATIC_ROOT = 'static-files'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static'
-]
-
+# STATIC_ROOT = 'static-files'
+# STATICFILES_DIRS = [
+#     BASE_DIR / 'static'
+# ]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static-files')
 
 LOGIN_REDIRECT_URL = '/afterlogin'
 
