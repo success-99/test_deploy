@@ -44,13 +44,4 @@ psycopg2-binary==2.9.2
 openpyxl==3.1.2
 soupsieve~=2.4.1
 pip~=23.2.1
-attrs~=23.1.0
-wheel~=0.38.4
-psycopg2~=2.9.5
-coreapi~=2.3.3
-coreschema~=0.0.4
-marshmallow~=3.19.0
 python-dotenv~=1.0.0
-idna~=3.4
-chardet~=4.0.0
-setuptools~=65.5.0
