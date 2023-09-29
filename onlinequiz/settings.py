@@ -1,25 +1,13 @@
 import os
-# import environ
-from environs import Env
-
+from decouple import config
 from pathlib import Path
-env = Env()
-env.read_env()
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
-# env = environ.Env()
 
-# environs kutubxonasidan foydalanish
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-# BASE_DIR = Path(__file__).resolve().parent.parent
-
-# environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-
-SECRET_KEY = env.str("SECRET_KEY")
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.str("DEBUG")
 
 ALLOWED_HOSTS = ["*"]
 
@@ -107,11 +95,11 @@ WSGI_APPLICATION = 'onlinequiz.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env.str("DB_NAME"),
-        'HOST': env.str("DB_HOST"),
+        'NAME': config("DB_NAME"),
+        'HOST': config("DB_HOST"),
         'PORT': '5432',
-        'USER': env.str("DB_USER"),
-        'PASSWORD': env.str("DB_PASSWORD")
+        'USER': config("DB_USER"),
+        'PASSWORD': config("DB_PASSWORD")
 
     }
 }
@@ -151,15 +139,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 
-# MEDIA_ROOT = 'media'
 MEDIA_ROOT = str(BASE_DIR.joinpath("media"))
 MEDIA_URL = '/media/'
 
 STATIC_URL = '/static/'
-# STATIC_ROOT = 'static-files'
-# STATICFILES_DIRS = [
-#     BASE_DIR / 'static'
-# ]
+
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static-files')
 
@@ -172,11 +156,11 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')  # this email will be used to send emails
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')  # this email will be used to send emails
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
-DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')  # Your email address
-ADMIN_EMAIL = env('ADMIN_EMAIL')  #
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')  # Your email address
+ADMIN_EMAIL = config('ADMIN_EMAIL')  #
 
 
 CKEDITOR_RESTRICT_BY_DATE = False
