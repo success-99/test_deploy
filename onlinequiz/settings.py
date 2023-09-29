@@ -1,12 +1,12 @@
+from environs import Env
 import os
-from decouple import config
 from pathlib import Path
-
-
+env = Env()
+env.read_env()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', default=False, cast=bool)
+SECRET_KEY = env.str('SECRET_KEY')
+DEBUG = env.str('DEBUG')
 
 
 ALLOWED_HOSTS = ["*"]
@@ -95,11 +95,11 @@ WSGI_APPLICATION = 'onlinequiz.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config("DB_NAME"),
-        'HOST': config("DB_HOST"),
+        'NAME': env.str("DB_NAME"),
+        'HOST': env.str("DB_HOST"),
         'PORT': '5432',
-        'USER': config("DB_USER"),
-        'PASSWORD': config("DB_PASSWORD")
+        'USER': env.str("DB_USER"),
+        'PASSWORD': env.str("DB_PASSWORD")
 
     }
 }
@@ -156,11 +156,11 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')  # this email will be used to send emails
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = env.str('EMAIL_HOST_USER')  # this email will be used to send emails
+EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD')
 
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')  # Your email address
-ADMIN_EMAIL = config('ADMIN_EMAIL')  #
+DEFAULT_FROM_EMAIL = env.str('DEFAULT_FROM_EMAIL')  # Your email address
+ADMIN_EMAIL = env.str('ADMIN_EMAIL')  #
 
 
 CKEDITOR_RESTRICT_BY_DATE = False
