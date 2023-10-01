@@ -1,13 +1,23 @@
-from environs import Env
 import os
+import environ
 from pathlib import Path
 
-env = Env()
-env.read_env()
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+
+# environs kutubxonasidan foydalanish
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
 SECRET_KEY = env.str('SECRET_KEY')
-DEBUG = env.bool('DEBUG')
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = ["*"]
 
@@ -25,6 +35,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'widget_tweaks',
     'ckeditor',
+    'django_cleanup',
     'ckeditor_uploader',
     'debug_toolbar',
 
@@ -94,11 +105,11 @@ WSGI_APPLICATION = 'onlinequiz.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env.str("DB_NAME"),
-        'HOST': env.str("DB_HOST"),
+        'NAME': env('DB_NAME'),
+        'HOST': env('DB_HOST'),
         'PORT': '5432',
-        'USER': env.str("DB_USER"),
-        'PASSWORD': env.str("DB_PASSWORD")
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD')
 
     }
 }
@@ -138,40 +149,45 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 
-STATIC_URL = '/static/'
+MEDIA_ROOT = 'media'
+MEDIA_URL = '/media/'
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static-files')
+STATIC_URL = '/static/'
+STATIC_ROOT = 'static-files'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static'
+]
+
 
 LOGIN_REDIRECT_URL = '/afterlogin'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
-MEDIA_ROOT = [os.path.join(BASE_DIR, 'media')]
-
-MEDIA_URL = '/media/'
 
 # for contact us give your gmail id and password
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = env.str('EMAIL_HOST_USER')  # this email will be used to send emails
-EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')  # this email will be used to send emails
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
-DEFAULT_FROM_EMAIL = env.str('DEFAULT_FROM_EMAIL')  # Your email address
-ADMIN_EMAIL = env.str('ADMIN_EMAIL')  #
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')  # Your email address
+ADMIN_EMAIL = env('ADMIN_EMAIL')  #
+
 
 CKEDITOR_RESTRICT_BY_DATE = False
 
+
 CKEDITOR_CONFIGS = {
-    'default': {
-        'height': 150,
-        'width': 970,
-        'removePlugins': 'stylesheetparser',
-        'allowedContent': True,
-    },
+  'default': {
+      'height': 150,
+      'width': 970,
+      'removePlugins': 'stylesheetparser',
+      'allowedContent': True,
+  },
 }
 CKEDITOR_ALLOW_NONIMAGE_FILES = False
+
 
 INTERNAL_IPS = [
     '127.0.0.1'

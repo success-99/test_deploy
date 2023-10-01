@@ -89,8 +89,9 @@ urlpatterns = [
                   path('delete-cache-img', views.delete_cache_img, name='delete-cache-img'),
 
 ]
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler404 = 'quiz.views.handling_404'
 handler500 = 'quiz.views.handling_500'
