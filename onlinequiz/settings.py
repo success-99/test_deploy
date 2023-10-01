@@ -158,7 +158,6 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
 
-
 LOGIN_REDIRECT_URL = '/afterlogin'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
@@ -174,20 +173,20 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')  # Your email address
 ADMIN_EMAIL = env('ADMIN_EMAIL')  #
 
-
 CKEDITOR_RESTRICT_BY_DATE = False
 
-
 CKEDITOR_CONFIGS = {
-  'default': {
-      'height': 150,
-      'width': 970,
-      'removePlugins': 'stylesheetparser',
-      'allowedContent': True,
-  },
+    'default': {
+        'height': 150,
+        'width': 970,
+        'skin': 'moono',
+        'toolbar_YourCustomToolbarConfig': [
+            {'name': 'insert',
+             'items': ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe']},
+            '/', ]
+    }
 }
 CKEDITOR_ALLOW_NONIMAGE_FILES = False
-
 
 INTERNAL_IPS = [
     '127.0.0.1'
