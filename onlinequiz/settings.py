@@ -1,13 +1,13 @@
 from environs import Env
 import os
 from pathlib import Path
+
 env = Env()
 env.read_env()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = env.str('SECRET_KEY')
 DEBUG = env.str('DEBUG')
-
 
 ALLOWED_HOSTS = ["*"]
 
@@ -25,7 +25,6 @@ INSTALLED_APPS = [
     'drf_yasg',
     'widget_tweaks',
     'ckeditor',
-    'django_cleanup',
     'ckeditor_uploader',
     'debug_toolbar',
 
@@ -139,9 +138,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 
-MEDIA_ROOT = str(BASE_DIR.joinpath("media"))
-MEDIA_URL = '/media/'
-
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
@@ -150,6 +146,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static-files')
 LOGIN_REDIRECT_URL = '/afterlogin'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+MEDIA_ROOT = [os.path.join(BASE_DIR, 'media')]
+
+MEDIA_URL = '/media/'
 
 # for contact us give your gmail id and password
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -162,20 +161,17 @@ EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = env.str('DEFAULT_FROM_EMAIL')  # Your email address
 ADMIN_EMAIL = env.str('ADMIN_EMAIL')  #
 
-
 CKEDITOR_RESTRICT_BY_DATE = False
 
-
 CKEDITOR_CONFIGS = {
-  'default': {
-      'height': 150,
-      'width': 970,
-      'removePlugins': 'stylesheetparser',
-      'allowedContent': True,
-  },
+    'default': {
+        'height': 150,
+        'width': 970,
+        'removePlugins': 'stylesheetparser',
+        'allowedContent': True,
+    },
 }
 CKEDITOR_ALLOW_NONIMAGE_FILES = False
-
 
 INTERNAL_IPS = [
     '127.0.0.1'
