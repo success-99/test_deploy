@@ -28,7 +28,7 @@ class CourseForm(forms.ModelForm):
 
 
 class QuestionForm(forms.ModelForm):
-    classes = forms.ModelChoiceField(queryset=models.Classes.objects.all().filter(status=True), empty_label="Sinfni tanlash",
+    classes = forms.ModelChoiceField(queryset=models.Classes.objects.all(), empty_label="Sinfni tanlash",
                                      to_field_name="id")
 
     class Meta:

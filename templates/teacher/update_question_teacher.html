@@ -2,52 +2,61 @@
 {% load widget_tweaks %}
 {% block content %}
 <head>
-  <style media="screen">
-    input[type=text], select,input[type=number] ,input[type=password], textarea{
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-
-  input[type=submit] {
-    width: 100%;
-    background-color: #4CAF50;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
-  input[type=submit]:hover {
-    background-color: #45a049;
-  }
-
-
-  </style>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
 
 </head>
 
-
-<h3 style="text-align:center;">Savollarni tahrirlash</h3>
+<a class="btn btn-primary btn-xs custom-margin-left" href="#" id="back-button">
+        <span class="glyphicon glyphicon-circle-arrow-left"></span> Ortga qaytish
+      </a>
+<h3 style="text-align:center;">Savolni tahrirlash</h3>
 <div>
-  <form method="post" autocomplete="off" enctype="multipart/form-data" style="margin-left:150px;margin-right:150px;">
-      {% csrf_token %}
-      {{ form.media }}
-    {{ form.as_p }}
+  <form method="POST" enctype="multipart/form-data" autocomplete="off" style="margin:100px;margin-top: 0px;">
+    {%csrf_token%}
+    {{ form.media }}
+    <div class="form-group">
 
-<br><br>
-    <input type="submit" value="Yangilash">
+        <label for="classes">Sinf</label>
+      {% render_field form.classes|attr:'required:true' class="form-control"  %}
+        <br>
+
+      <label for="question">Savol</label>
+      {% render_field form.question|attr:'required:true' class="form-control" placeholder="What is the currency of Uzbekistan ?" %}
+        <br><br>
+      <label for="question_number">Savol uchun ball</label>
+      {% render_field form.marks|attr:'required:true' class="form-control" placeholder="10" %}
+        <br>
+      <label for="variant_A">Variant A</label>
+      {% render_field form.variant_A|attr:'required:true' class="form-control" placeholder="Rupees" %}
+        <br><br>
+      <label for="variant_B">Variant B</label>
+      {% render_field form.variant_B|attr:'required:true' class="form-control" placeholder="Dollar" %}
+        <br><br>
+      <label for="variant_C">Variant C</label>
+      {% render_field form.variant_C|attr:'required:true' class="form-control" placeholder="Sum" %}
+        <br><br>
+      <label for="variant_D">Variant D</label>
+      {% render_field form.variant_D|attr:'required:true' class="form-control" placeholder="Euro" %}
+        <br><br>
+      <label for="answer">To'g'ri javobni tanlang</label>
+      {% render_field form.answer|attr:'required:true' class="form-control" %}
+    </div>
+
+
+
+    <button type="submit" class="btn btn-primary">Yangilash</button>
+
   </form>
 </div>
 
 
-
+<script>
+    document.getElementById("back-button").addEventListener("click", function () {
+        window.history.back();
+    });
+</script>
 <br><br><br><br>
 {% endblock content %}

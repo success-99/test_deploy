@@ -190,7 +190,6 @@ CKEDITOR_CONFIGS = {
             ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak'],
             ['Styles', 'Format', 'Font', 'FontSize'],
             ['TextColor', 'BGColor'],
-            ['Maximize', 'ShowBlocks', '-', 'About', 'pbckcode'],
         ),
     }
 }
