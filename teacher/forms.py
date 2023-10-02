@@ -63,7 +63,7 @@ class TeacherUserForm(forms.ModelForm):
 
 
 class TeacherForm(forms.ModelForm):
-    course = forms.ModelChoiceField(queryset=Course.objects.all(), empty_label="Fan nomi",
+    course = forms.ModelChoiceField(queryset=Course.objects.all().filter(status=True), empty_label="Fan nomi",
                                     to_field_name="id")
 
     class Meta:

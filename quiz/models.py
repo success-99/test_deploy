@@ -14,6 +14,7 @@ class BaseModel(models.Model):
 
 class Classes(BaseModel):
     class_name = models.CharField(max_length=100)
+    status = models.BooleanField(default=False)
 
     def __str__(self):
         return self.class_name

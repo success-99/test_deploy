@@ -46,31 +46,29 @@
 <div class="container">
   <div class="panel panel-primary">
     <div class="panel-heading">
-      <h6 class="panel-title">Barcha fanlar</h6>
+      <h6 class="panel-title">Barcha sinflar</h6>
     </div>
     <table class="table table-hover" id="dev-table">
       <thead>
         <tr>
 
-          <th>Fan nomi</th>
-
-          <th>Ko'rish</th>
-          <th> </th>
+          <th>Sinf nomi</th>
+          <th>Tahrirlash</th>
+          <th>O'chirish</th>
         </tr>
       </thead>
-      {% for c in course %}
+      {% for c in classes %}
       <tr>
 
-        <td> {{c.course_name}}</td>
+        <td> {{c.class_name}}</td>
+        <td><a class="btn btn-info btn-xs" href="{% url 'update-class' c.id %}"><span class="glyphicon glyphicon-edit"></span></a></td>
 
-
-        <td><a class="btn btn-danger btn-xs" href="{% url 'admin-update-click-course' c.id %}"><span class="glyphicon glyphicon-edit
-"></span></a></td>
-        <th> </th>
+        <td><a class="btn btn-danger btn-xs" href="{% url 'delete-class' c.id %}" onclick="return confirm('Ishonchingiz komilmi? Agar o\'chirsangiz bu sinfga bogliq barcha ma`lumotlar o\'chiriladi!')"><span class="glyphicon glyphicon-trash"></span></a></td>
       </tr>
       {% endfor %}
     </table>
   </div>
+  <a class="btn btn-success btn-xs" href="{% url 'admin-add-class' %}"><span class="glyphicon glyphicon-plus-sign"></span> Sinf qo'shish</a>
 </div>
 <br><br><br><br><br><br><br><br><br><br>
 <br><br><br><br><br><br><br><br><br><br>

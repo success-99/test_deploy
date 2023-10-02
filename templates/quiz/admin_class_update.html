@@ -1,4 +1,5 @@
 {% extends 'quiz/adminbase.html' %}
+{% load static %}
 {% load widget_tweaks %}
 {% block content %}
 <head>
@@ -42,36 +43,17 @@
 
   </style>
 </head>
-<br><br>
-<div class="container">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h6 class="panel-title">Barcha fanlar</h6>
-    </div>
-    <table class="table table-hover" id="dev-table">
-      <thead>
-        <tr>
-
-          <th>Fan nomi</th>
-
-          <th>Ko'rish</th>
-          <th> </th>
-        </tr>
-      </thead>
-      {% for c in course %}
-      <tr>
-
-        <td> {{c.course_name}}</td>
+<h2 style="text-align:center;">Sinfni tahrirlash: {{ classes.class_name }}</h2>
+<h5 style="text-align:center;">Sinfni faol yoki nofaol qilishingiz mumkin!</h5>
 
 
-        <td><a class="btn btn-danger btn-xs" href="{% url 'admin-update-click-course' c.id %}"><span class="glyphicon glyphicon-edit
-"></span></a></td>
-        <th> </th>
-      </tr>
-      {% endfor %}
-    </table>
-  </div>
+<div class="form-container">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="submit-button" onclick="return confirm('O\'zgartirishga, ishonchingiz komilmi?')">Saqlash</button>
+    </form>
 </div>
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
 {% endblock content %}

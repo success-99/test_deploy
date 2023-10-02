@@ -263,6 +263,49 @@ def delete_course_view(request, pk):
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_staff_user)
+def admin_add_classes_view(request):
+    classesForm = forms.ClassesForm
+    if request.method == 'POST':
+        classesForm = forms.ClassesForm(request.POST)
+        if classesForm.is_valid():
+            classesForm.save()
+        else:
+            print("form is invalid")
+        return HttpResponseRedirect('/admin-view-classes')
+    return render(request, 'quiz/admin_add_class.html', {'classesForm': classesForm})
+
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
+def admin_classes_view(request):
+    classes = models.Classes.objects.all().order_by('class_name').order_by('-status')
+    return render(request, 'quiz/admin_classes.html', {'classes': classes})
+
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
+def admin_update_class_view(request, pk):
+    classes = get_object_or_404(models.Classes, id=pk)
+
+    if request.method == 'POST':
+        form = forms.UpdateClassesForm(request.POST, instance=classes)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/admin-view-classes')
+    else:
+        form = forms.UpdateClassesForm(instance=classes)
+
+    return render(request, 'quiz/admin_class_update.html', {'form': form, 'classes': classes})
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
+def delete_class_view(request, pk):
+    cl = models.Classes.objects.get(id=pk)
+    cl.delete()
+    return HttpResponseRedirect('/admin-view-classes')
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_staff_user)
 def admin_question_view(request):
     return render(request, 'quiz/admin_question.html')
 
