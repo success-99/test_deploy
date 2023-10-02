@@ -50,8 +50,10 @@
     </div>
     <hr style="height: 2px; border-width: 0; color: gray; background-color: gray">
   {% endfor %}
+  {% if questions %}
 
   <input class="btn btn-info btn-lg" type="submit" value="Tugatish" onclick="return confirm('Barchasini belgilaganingizga, ishonchingiz komilmi?');">
+  {% endif %}
 </form>
 </div>
 <script>
@@ -74,5 +76,6 @@
   }
 </script>
 
-<br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
 {% endblock content %}

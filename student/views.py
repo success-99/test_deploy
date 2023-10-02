@@ -93,9 +93,8 @@ def start_exam_view(request, pk):
     course = QMODEL.Course.objects.get(id=pk)
     questions = QMODEL.Question.objects.all().filter(course=course, classes=classes_id)
     if not course.status:
-        messages.error(request, "Bu imtihon hali faollashtirilmagan")
 
-        return HttpResponse("Bu kurs hali faollashtirilmagan")
+        return render(request, 'student/course_status_false.html')
 
     if 'clear_cookies' in request.GET and request.GET['clear_cookies'] == '1':
         response = render(request, 'student/start_exam.html', {'course': course, 'questions': questions})

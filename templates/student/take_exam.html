@@ -11,6 +11,9 @@
 </head>
 <br><br>
 <div class="container my-4">
+     <a class="btn btn-primary btn-xs custom-margin-left" href="#" id="back-button">
+        <span class="glyphicon glyphicon-circle-arrow-left"></span> Ortga qaytish
+      </a>
     <div class="jumbotron">
 
 	      <h3 class="text-info text-center">Imtihonning ma'lumotlar va eslatmalari !</h3>
@@ -48,6 +51,10 @@
 
     </div>
 </div>
-
+<script>
+    document.getElementById("back-button").addEventListener("click", function () {
+        window.history.back();
+    });
+</script>
 <br><br><br><br><br><br>
 {% endblock content %}
