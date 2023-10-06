@@ -176,20 +176,42 @@ CKEDITOR_RESTRICT_BY_DATE = False
 
 CKEDITOR_CONFIGS = {
     'default': {
-        'height': 150,
-        'width': 970,
-        'toolbar': (
-            ['div', 'Source', '-', 'Save', 'NewPage', 'Preview', '-', 'Templates'],
-            ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Print', 'SpellChecker', 'Scayt'],
-            ['Undo', 'Redo', '-', 'Find', 'Replace', '-', 'SelectAll', 'RemoveFormat'],
-            ['Bold', 'Italic', 'Underline', 'Strike', '-', 'Subscript', 'Superscript'],
-            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote'],
-            ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-            ['Link', 'Unlink', 'Anchor'],
-            ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak'],
-            ['Styles', 'Format', 'Font', 'FontSize'],
-            ['TextColor', 'BGColor'],
-        ),
+        'toolbar_Basic': [
+            ['Source', '-', 'Bold', 'Italic']
+        ],
+        'toolbar_YourCustomToolbarConfig': [
+            {'name': 'insert',
+             'items': ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe']},
+            '/',
+            {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
+            {'name': 'colors', 'items': ['TextColor', 'BGColor']},
+            {'name': 'tools', 'items': ['Maximize', 'ShowBlocks']},
+            {'name': 'about', 'items': ['About']},
+            '/',  # put this to force next toolbar on new line
+            {'name': 'yourcustomtools', 'items': [
+                # put the name of your editor.ui.addButton here
+                'Preview',
+                'Maximize',
+
+            ]},
+        ],
+        'toolbar': 'YourCustomToolbarConfig',  # put selected toolbar config here
+        'tabSpaces': 4,
+        'extraPlugins': ','.join([
+            'uploadimage', # the upload image feature
+            'div',
+            'autolink',
+            'autoembed',
+            'embedsemantic',
+            'autogrow',
+            # 'devtools',
+            'widget',
+            'lineutils',
+            'clipboard',
+            'dialog',
+            'dialogui',
+            'elementspath'
+        ]),
     }
 }
 CKEDITOR_ALLOW_NONIMAGE_FILES = False
