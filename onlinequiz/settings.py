@@ -35,7 +35,6 @@ INSTALLED_APPS = [
     'drf_yasg',
     'widget_tweaks',
     'ckeditor',
-    'django_cleanup',
     'ckeditor_uploader',
     'debug_toolbar',
 
