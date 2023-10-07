@@ -173,9 +173,12 @@ DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')  # Your email address
 ADMIN_EMAIL = env('ADMIN_EMAIL')  #
 
 CKEDITOR_RESTRICT_BY_DATE = False
+CKEDITOR_JQUERY_URL = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'
 
 CKEDITOR_CONFIGS = {
     'default': {
+        'height': 250,
+        'width': 900,
         'toolbar_Basic': [
             ['Source', '-', 'Bold', 'Italic']
         ],
@@ -198,7 +201,7 @@ CKEDITOR_CONFIGS = {
         'toolbar': 'YourCustomToolbarConfig',  # put selected toolbar config here
         'tabSpaces': 4,
         'extraPlugins': ','.join([
-            'uploadimage', # the upload image feature
+            'uploadimage',  # the upload image feature
             'div',
             'autolink',
             'autoembed',
