@@ -57,3 +57,12 @@ class Result(BaseModel):
 
     def __str__(self):
         return str(self.student)
+
+
+class RandomQuestionMarks(BaseModel):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    classes = models.ForeignKey(Classes, on_delete=models.CASCADE)
+    marks = models.PositiveIntegerField(default=5)
+
+    def __str__(self):
+        return str(self.course)

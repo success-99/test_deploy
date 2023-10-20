@@ -1,3 +1,4 @@
+import random
 from django.shortcuts import render, redirect, reverse
 from . import forms, models
 from django.db.models import Sum
@@ -91,23 +92,30 @@ def start_exam_view(request, pk):
     student = models.Student.objects.get(user=request.user)
     classes_id = student.classes.id
     course = QMODEL.Course.objects.get(id=pk)
-    questions = QMODEL.Question.objects.all().filter(course=course, classes=classes_id)
-    if not course.status:
+    questions = list(QMODEL.Question.objects.filter(course=course, classes=classes_id))  # Ro'yxatni listga o'zgartiramiz
+    random_num = QMODEL.RandomQuestionMarks.objects.filter(course=course, classes=classes_id).first()
+    num = random_num.marks
+    random_questions = random.sample(questions, num)
 
-        return render(request, 'student/course_status_false.html')
+    if not course.status:
+        messages.error(request, "Bu imtihon hali faollashtirilmagan")
+        return HttpResponse("Bu kurs hali faollashtirilmagan")
 
     if 'clear_cookies' in request.GET and request.GET['clear_cookies'] == '1':
-        response = render(request, 'student/start_exam.html', {'course': course, 'questions': questions})
-        for i in range(len(questions)):
-            response.delete_cookie(str(i + 1))
+        response = render(request, 'student/start_exam.html', {'course': course, 'questions': random_questions})
+
+        all_cookies = request.COOKIES
+        for cookie_name in all_cookies:
+            if len(cookie_name) > 35:
+                response.delete_cookie(cookie_name)
         return response
 
     if request.method == 'POST':
-        print(request)
         pass
-    response = render(request, 'student/start_exam.html', {'course': course, 'questions': questions})
+    response = render(request, 'student/start_exam.html', {'course': course, 'questions': random_questions})
     if request.COOKIES.get('course_id') is None:
         response.set_cookie('course_id', course.id)
+
     return response
 
 
@@ -120,22 +128,25 @@ def calculate_marks_view(request):
         student = models.Student.objects.get(user_id=request.user.id)
         classes_id = student.classes
         total_marks = 0
-        questions = QMODEL.Question.objects.all().filter(course=course, classes=classes_id)
         question_results = []
+        questions = QMODEL.Question.objects.filter(course=course, classes=classes_id)
+        all_cookies = request.COOKIES
 
-        for i in range(len(questions)):
-            actual_answer = questions[i].answer
-            selected_ans = request.COOKIES.get(str(i + 1))
-            if actual_answer == selected_ans and selected_ans is not None:
-                total_marks = total_marks + questions[i].marks
-            if selected_ans is None:
-                selected_ans = 'belgilanmagan'
-            if selected_ans != actual_answer:
-                question_results.append({
-                    'question': questions[i].question,
-                    'selected_answer': selected_ans,
-                    'correct_answer': actual_answer
-                })
+        for key, value in all_cookies.items():
+            for question in questions:
+                if str(question.id) == key:
+                    actual_answer = question.answer
+                    selected_ans = value
+                    if actual_answer == selected_ans and selected_ans is not None:
+                        total_marks = total_marks + question.marks
+                    if selected_ans is None:
+                        selected_ans = 'belgilanmagan'
+                    if selected_ans != actual_answer:
+                        question_results.append({
+                            'question': question.question,
+                            'selected_answer': selected_ans,
+                            'correct_answer': actual_answer
+                        })
         student_classes = student.classes
         result = QMODEL.Result()
         result.marks = total_marks

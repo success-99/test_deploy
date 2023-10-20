@@ -22,51 +22,49 @@
     <h4 style="text-align: right;">[Ball {{ q.marks }}]</h4>
 
     <div class="form-check mx-4">
-      <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{ q.variant_A }}" value="variant_A">
+      <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{ q.variant_A }}" value="variant_A" data-question-id="{{ q.id }}">
       <label class="form-check-label" for="{{ q.variant_A }}">
         {{ q.variant_A | safe }}
       </label>
     </div>
 
     <div class="form-check mx-4">
-      <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{ q.variant_B }}" value="variant_B">
+      <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{ q.variant_B }}" value="variant_B" data-question-id="{{ q.id }}">
       <label class="form-check-label" for="{{ q.variant_B }}">
         {{ q.variant_B | safe }}
       </label>
     </div>
 
     <div class="form-check mx-4">
-      <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{ q.variant_C }}" value="variant_C">
+      <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{ q.variant_C }}" value="variant_C" data-question-id="{{ q.id }}">
       <label class="form-check-label" for="{{ q.variant_C }}">
         {{ q.variant_C | safe }}
       </label>
     </div>
 
     <div class="form-check mx-4">
-      <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{ q.variant_D }}" value="variant_D">
+      <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{ q.variant_D }}" value="variant_D" data-question-id="{{ q.id }}">
       <label class="form-check-label" for="{{ q.variant_D }}">
         {{ q.variant_D | safe }}
       </label>
     </div>
     <hr style="height: 2px; border-width: 0; color: gray; background-color: gray">
   {% endfor %}
-  {% if questions %}
 
   <input class="btn btn-info btn-lg" type="submit" value="Tugatish" onclick="return confirm('Barchasini belgilaganingizga, ishonchingiz komilmi?');">
-  {% endif %}
 </form>
 </div>
 <script>
-  function saveAns() {
-    var ele = document.getElementsByTagName('input');
+ function saveAns() {
+    var ele = document.querySelectorAll('input[type="radio"]');
     for (i = 0; i < ele.length; i++) {
-      if (ele[i].type === "radio") {
-        if (ele[i].checked) {
-          setCookie(ele[i].name, ele[i].value, 3);
+        if (ele[i].type === "radio" && ele[i].checked) {
+            var questionId = ele[i].getAttribute("data-question-id");
+            var selectedAnswer = ele[i].value;
+            setCookie(questionId, selectedAnswer, 3);
         }
-      }
     }
-  }
+}
 
   function setCookie(cname, cvalue, exdays) {
     var d = new Date();
@@ -76,6 +74,7 @@
   }
 </script>
 
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
+
+<br><br><br><br><br><br>
 {% endblock content %}

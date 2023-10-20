@@ -359,3 +359,46 @@ def student_class_update(request, student_id):
         form = StudentClassUpdateForm(instance=student)
 
     return render(request, 'student/student_class_update.html', {'form': form, 'student': student})
+
+
+@login_required(login_url='teacherlogin')
+@user_passes_test(is_teacher)
+def teacher_view_question_random(request):
+    teacher = Teacher.objects.get(user=request.user)
+    course_id = teacher.course.id
+    courses = QMODEL.Course.objects.all().filter(id=course_id)
+    classes = QMODEL.Classes.objects.all()
+    response = render(request, 'teacher/teacher_view_question_random.html', {'courses': courses, 'classes': classes})
+    response.set_cookie('course_id',course_id)
+
+    return response
+
+
+@login_required(login_url='teacherlogin')
+@user_passes_test(is_teacher)
+def teacher_random_question_marks(request, class_id):
+    classes = QMODEL.Classes.objects.get(id=class_id)
+    course_id = request.COOKIES.get('course_id')
+    random_n = QMODEL.RandomQuestionMarks.objects.all().filter(classes=classes, course=course_id).first
+    if request.method == 'POST':
+        questionRandomForm = QFORM.RandomQuestionMarksForm(request.POST, instance=random_n)
+        if questionRandomForm.is_valid():
+            question_random = questionRandomForm.save(commit=False)
+            teacher = Teacher.objects.get(user=request.user)
+            course_id = str(teacher.course.id)
+            course = QMODEL.Course.objects.get(id=course_id)
+            classes = QMODEL.Classes.objects.get(id=class_id)
+            marks = question_random.marks
+            question_count = QMODEL.Question.objects.filter(course=course, classes=classes).count()
+            if marks <= question_count:
+                question_random.course = course
+                question_random.classes = classes
+                question_random.save()
+                return HttpResponseRedirect('/teacher/teacher-view-question-number')
+            else:
+                messages.error(request, "Nato'g'ri son kiritdingiz!!!")
+        else:
+            print("Form is invalid")
+    else:
+        questionRandomForm = QFORM.RandomQuestionMarksForm(instance=random_n)
+    return render(request, 'teacher/teacher_add_question_num.html', {'form': questionRandomForm, 'classes': classes})

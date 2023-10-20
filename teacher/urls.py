@@ -33,4 +33,7 @@ urlpatterns = [
     path('update-course', views.tech_update_course, name='update-course'),
     path('student-class-update/<uuid:student_id>', views.student_class_update, name='student-class-update'),
 
+    path('teacher-view-question-number', views.teacher_view_question_random, name='teacher-view-question-random'),
+    path('teacher-add-random-number/<uuid:class_id>', views.teacher_random_question_marks, name='teacher-random-question-marks'),
+
 ]

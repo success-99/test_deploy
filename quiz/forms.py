@@ -75,3 +75,9 @@ class UpdateClassesForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         # Adding class to the status field to style it as a toggle switch
         self.fields['status'].widget.attrs.update({'class': 'toggle-switch'})
+
+
+class RandomQuestionMarksForm(forms.ModelForm):
+    class Meta:
+        model = models.RandomQuestionMarks
+        fields = ['marks']
