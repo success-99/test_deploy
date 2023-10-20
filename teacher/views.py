@@ -379,7 +379,7 @@ def teacher_view_question_random(request):
 def teacher_random_question_marks(request, class_id):
     classes = QMODEL.Classes.objects.get(id=class_id)
     course_id = request.COOKIES.get('course_id')
-    random_n = QMODEL.RandomQuestionMarks.objects.all().filter(classes=classes, course=course_id).first
+    random_n = QMODEL.RandomQuestionMarks.objects.all().filter(classes=classes, course=course_id).first()
     if request.method == 'POST':
         questionRandomForm = QFORM.RandomQuestionMarksForm(request.POST, instance=random_n)
         if questionRandomForm.is_valid():
