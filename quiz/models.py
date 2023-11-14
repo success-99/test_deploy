@@ -54,6 +54,7 @@ class Result(BaseModel):
     marks = models.PositiveIntegerField()
     question_results = models.JSONField(null=True)  # JSONField for question results
     date = models.DateTimeField(auto_now=True)
+    c_marks = models.PositiveIntegerField(default=100)
 
     def __str__(self):
         return str(self.student)

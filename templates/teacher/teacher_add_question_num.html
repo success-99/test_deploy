@@ -42,7 +42,7 @@
 
   </style>
 </head>
-<h2 style="text-align:center;">Fanni tahrirlash: {{ classes.class_name }}</h2>
+<h2 style="text-align:center;">Fanni tahrirlash: {{ classes.class_name }} || Savollar umumiy soni: {{ que_c }}</h2>
 <h5 style="text-align:center;">O'quvchilarga random orqali tushadigan savollar sonini belgilash.</h5>
 <h4 style="text-align:center;">Kiritayotgan soningiz test savollari sonidan katta bo'lmasligi kerak!!!</h4>
 
@@ -55,12 +55,11 @@
         <button type="submit" class="submit-button">Saqlash</button>
         {% if messages %}
 <ul class="messages">
-    {% for message in messages %}
-    <br>
+    {% for message in messages %}<br>
     <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
     {% endfor %}
 </ul>
-{% endif %}
+    {% endif %}
     </form>
 </div>
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>

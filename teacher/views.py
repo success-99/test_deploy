@@ -380,6 +380,7 @@ def teacher_random_question_marks(request, class_id):
     classes = QMODEL.Classes.objects.get(id=class_id)
     course_id = request.COOKIES.get('course_id')
     random_n = QMODEL.RandomQuestionMarks.objects.all().filter(classes=classes, course=course_id).first()
+    question_count = QMODEL.Question.objects.filter(course=course_id, classes=classes).count()
     if request.method == 'POST':
         questionRandomForm = QFORM.RandomQuestionMarksForm(request.POST, instance=random_n)
         if questionRandomForm.is_valid():
@@ -401,4 +402,4 @@ def teacher_random_question_marks(request, class_id):
             print("Form is invalid")
     else:
         questionRandomForm = QFORM.RandomQuestionMarksForm(instance=random_n)
-    return render(request, 'teacher/teacher_add_question_num.html', {'form': questionRandomForm, 'classes': classes})
+    return render(request, 'teacher/teacher_add_question_num.html', {'form': questionRandomForm, 'classes': classes, 'que_c': question_count})

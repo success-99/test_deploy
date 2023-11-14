@@ -74,16 +74,16 @@ def take_exam_view(request, pk):
     student = models.Student.objects.get(user=request.user)
     classes_id = student.classes.id
     course = QMODEL.Course.objects.get(id=pk)
-    total_questions = QMODEL.Question.objects.all().filter(course=course, classes=classes_id).count()
+    random_num = QMODEL.RandomQuestionMarks.objects.filter(course=course, classes=classes_id).first()
+    num = random_num.marks
     questions = QMODEL.Question.objects.all().filter(course=course, classes=classes_id)
     total_marks = 0
     for q in questions:
         total_marks = total_marks + q.marks
     response = render(request, 'student/take_exam.html',
-                  {'course': course, 'total_questions': total_questions, 'total_marks': total_marks})
+                      {'course': course, 'total_questions': num, 'total_marks': total_marks})
     response.set_cookie('course_id', course.id)
     return response
-
 
 
 @login_required(login_url='studentlogin')
@@ -92,18 +92,38 @@ def start_exam_view(request, pk):
     student = models.Student.objects.get(user=request.user)
     classes_id = student.classes.id
     course = QMODEL.Course.objects.get(id=pk)
-    questions = list(QMODEL.Question.objects.filter(course=course, classes=classes_id))  # Ro'yxatni listga o'zgartiramiz
+    questions = list(QMODEL.Question.objects.filter(course=course, classes=classes_id))
+
+    # Savollarni random rqali o'quvchilarga jo'natish
     random_num = QMODEL.RandomQuestionMarks.objects.filter(course=course, classes=classes_id).first()
     num = random_num.marks
     random_questions = random.sample(questions, num)
 
-    if not course.status:
-        messages.error(request, "Bu imtihon hali faollashtirilmagan")
-        return HttpResponse("Bu kurs hali faollashtirilmagan")
+    # random orqali tushadigan savollarni
+    unique_marks = QMODEL.Question.objects.filter(course=course, classes=classes_id).values_list('marks', flat=True).distinct()
+    random_q = list(unique_marks)
+    question_counts = {}
+    for mark in random_q:
+        count = QMODEL.Question.objects.filter(course=course, classes=classes_id, marks=mark).count()
+        question_counts[mark] = count
 
+    for mark, count in question_counts.items():
+        print(f"Questions with {mark} marks: {count} questions")
+
+    # random orqali tushgan savollarning umumiy balli
+    y = 0
+    for rn in random_questions:
+        y = y + rn.marks
+
+    # fan nofaol bo'lsa test ishlashga ruxsat yo'q
+    if not course.status:
+        messages.error(request, "Bu fan hali faollashtirilmagan")
+        return HttpResponse("Bu fan hali faollashtirilmagan")
+
+    # cookieni ortiqcha malumotlardan tozalash
     if 'clear_cookies' in request.GET and request.GET['clear_cookies'] == '1':
         response = render(request, 'student/start_exam.html', {'course': course, 'questions': random_questions})
-
+        response.set_cookie('u_marks', y)
         all_cookies = request.COOKIES
         for cookie_name in all_cookies:
             if len(cookie_name) > 35:
@@ -112,10 +132,11 @@ def start_exam_view(request, pk):
 
     if request.method == 'POST':
         pass
+
+    # cookiega fanning id sini yuborish
     response = render(request, 'student/start_exam.html', {'course': course, 'questions': random_questions})
     if request.COOKIES.get('course_id') is None:
         response.set_cookie('course_id', course.id)
-
     return response
 
 
@@ -124,6 +145,7 @@ def start_exam_view(request, pk):
 def calculate_marks_view(request):
     if request.COOKIES.get('course_id') is not None:
         course_id = request.COOKIES.get('course_id')
+        c_marks = request.COOKIES.get('u_marks')
         course = QMODEL.Course.objects.get(id=course_id)
         student = models.Student.objects.get(user_id=request.user.id)
         classes_id = student.classes
@@ -150,6 +172,7 @@ def calculate_marks_view(request):
         student_classes = student.classes
         result = QMODEL.Result()
         result.marks = total_marks
+        result.c_marks = c_marks
         result.course = course
         result.student = student
         result.classes = student_classes  # O'quvchining classes qiymatini saqlash
