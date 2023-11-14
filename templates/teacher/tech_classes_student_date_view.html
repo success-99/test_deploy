@@ -46,7 +46,7 @@
       <tr>
         <td>Urinish {{ forloop.counter }}</td>
         <td> {{t.date}}</td>
-        <td> {{t.marks}}</td>
+        <td> {{t.marks}}/{{t.c_marks}}</td>
         <td> <a class="btn btn-primary btn-xs" href="{% url 'teacher-student-result' t.id  %}"><span class="glyphicon glyphicon-eye-open"></span></a></td>
         <td><a class="btn btn-primary btn-xs" href="{% url 'remove-result' t.id  %}"><span class="glyphicon glyphicon-trash"></span></a></td>
 
