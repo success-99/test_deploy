@@ -75,6 +75,8 @@ def take_exam_view(request, pk):
     classes_id = student.classes.id
     course = QMODEL.Course.objects.get(id=pk)
     random_num = QMODEL.RandomQuestionMarks.objects.filter(course=course, classes=classes_id).first()
+    if random_num is None:
+        return render(request, 'student/none.html')
     num = random_num.marks
     questions = QMODEL.Question.objects.all().filter(course=course, classes=classes_id)
     total_marks = 0
@@ -96,19 +98,21 @@ def start_exam_view(request, pk):
 
     # Savollarni random rqali o'quvchilarga jo'natish
     random_num = QMODEL.RandomQuestionMarks.objects.filter(course=course, classes=classes_id).first()
+    if random_num is None:
+        return render(request, 'student/none.html')
     num = random_num.marks
     random_questions = random.sample(questions, num)
 
     # random orqali tushadigan savollarni
-    unique_marks = QMODEL.Question.objects.filter(course=course, classes=classes_id).values_list('marks', flat=True).distinct()
-    random_q = list(unique_marks)
-    question_counts = {}
-    for mark in random_q:
-        count = QMODEL.Question.objects.filter(course=course, classes=classes_id, marks=mark).count()
-        question_counts[mark] = count
-
-    for mark, count in question_counts.items():
-        print(f"Questions with {mark} marks: {count} questions")
+    # unique_marks = QMODEL.Question.objects.filter(course=course, classes=classes_id).values_list('marks', flat=True).distinct()
+    # random_q = list(unique_marks)
+    # question_counts = {}
+    # for mark in random_q:
+    #     count = QMODEL.Question.objects.filter(course=course, classes=classes_id, marks=mark).count()
+    #     question_counts[mark] = count
+    #
+    # for mark, count in question_counts.items():
+    #     print(f"Questions with {mark} marks: {count} questions")
 
     # random orqali tushgan savollarning umumiy balli
     y = 0

@@ -1,0 +1,32 @@
+{% extends 'student/studentbase.html' %}
+{% block content %}
+{%load static%}
+
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+
+</head>
+<br><br>
+<a class="btn btn-primary btn-xs custom-margin-left" href="#" id="back-button" style="margin-left: 40px;">
+    <span class="glyphicon glyphicon-circle-arrow-left"></span> Ortga qaytish
+</a>
+<div class="container my-4">
+
+	      <h1 class="text-info text-center"> Bu sahifa hozircha ishlamaydi !</h1>
+
+        </div>
+
+
+<script>
+    document.getElementById("back-button").addEventListener("click", function () {
+        window.history.back();
+    });
+</script>
+<br><br><br><br><br><br>
+<br><br><br><br><br><br>
+<br><br><br><br><br><br>
+
+{% endblock content %}
