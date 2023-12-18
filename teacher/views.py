@@ -70,6 +70,7 @@ def teacher_dashboard_view(request):
     }
     return render(request, 'teacher/teacher_dashboard.html', context=dict)
 
+#def
 
 @login_required(login_url='teacherlogin')
 @user_passes_test(is_teacher)
