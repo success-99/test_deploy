@@ -54,7 +54,7 @@ def teacher_signup_view(request):
 def is_teacher(user):
     return user.groups.filter(name='TEACHER').exists()
 
-
+#def
 @login_required(login_url='teacherlogin')
 @user_passes_test(is_teacher)
 def teacher_dashboard_view(request):
