@@ -8,8 +8,6 @@ env = environ.Env(
 )
 
 # environs kutubxonasidan foydalanish
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
