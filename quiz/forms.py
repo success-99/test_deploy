@@ -3,6 +3,7 @@ from django import forms
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth.models import User
 from . import models
+from django.utils.translation import gettext_lazy as _
 
 
 class ContactusForm(forms.Form):
@@ -19,6 +20,18 @@ class ClassesForm(forms.ModelForm):
     class Meta:
         model = models.Classes
         fields = ['class_name']
+
+    def clean_class_name(self):
+        class_name = self.cleaned_data['class_name']
+        if models.Classes.objects.filter(class_name__iexact=class_name).exists():
+            self.add_error("class_name", _("Bunday sinf mavjud! Sinf nomini o'zgartiring!"))
+        if not class_name:
+            raise forms.ValidationError("Sinf nomini kiriting!")
+        if len(class_name) < 3 or len(class_name) > 20:
+            raise forms.ValidationError("Sinf nomi 3 ta va 20 ta raqam oralig'ida bo'lishi kerak!")
+        if class_name.isdigit():
+            raise forms.ValidationError("Sinf nomi faqat sonlardan iborat bo'lmasligi kerak!")
+        return class_name
 
 
 class CourseForm(forms.ModelForm):
