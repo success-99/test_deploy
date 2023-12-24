@@ -2,11 +2,6 @@ import os
 import environ
 from pathlib import Path
 
-env = environ.Env(
-    # set casting, default value
-    DEBUG=(bool, False)
-)
-
 # environs kutubxonasidan foydalanish
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -17,7 +12,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG')
 
-ALLOWED_HOSTS = ["35.192.50.104", "localhost", "127.0.0.1", "http://musaffa.uz/"]
+ALLOWED_HOSTS = ["35.192.50.104"]
 
 # Application definition
 
