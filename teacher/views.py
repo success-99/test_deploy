@@ -139,9 +139,9 @@ def tech_classes_student_view(request, class_id):
     return response
 
 
-@login_required(login_url='teacherlogin')
+# @login_required(login_url='teacherlogin')
 @user_passes_test(is_teacher)
-def download_student_results(request):
+def download_student_results_teacher(request):
     # Students ro'yxatini olish (sizning tadbirlogikangizga qarab)
     class_id = request.COOKIES.get('class_id')
     selected_class = get_object_or_404(QMODEL.Classes, pk=class_id)

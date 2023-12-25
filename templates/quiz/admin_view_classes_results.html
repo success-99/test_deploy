@@ -46,7 +46,7 @@
         <td> {{cl.class_name}}</td>
         
         
-        <td><a class="btn btn-danger btn-xs" href="{% url 'download-students-results' cl.id %}" onclick="this.style.pointerEvents='none'; this.innerHTML='<strong>Yuklandi!</strong> ';"><span class="glyphicon glyphicon-save"></span></a></td>
+        <td><a class="btn btn-danger btn-xs" href="{% url 'download-students-results-admin' cl.id %}" onclick="this.style.pointerEvents='none'; this.innerHTML='<strong>Yuklandi!</strong> ';"><span class="glyphicon glyphicon-save"></span></a></td>
         <th> </th>
       </tr>
       {% endfor %}

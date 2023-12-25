@@ -343,7 +343,7 @@ def admin_view_classes_results(request, pk):
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_staff_user)
-def download_students_results(request, classes_id):
+def download_students_results_admin(request, classes_id):
     # Students ro'yxatini olish (sizning tadbirlogikangizga qarab)
     class_id = models.Classes.objects.filter(id=classes_id).first()
     course_id = request.COOKIES.get('course_id')

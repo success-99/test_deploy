@@ -68,8 +68,8 @@ urlpatterns = [
     path('admin-view-students-course', views.admin_view_students_course,
          name='admin-view-students-course'),
     path('admin-view-classes-results/<uuid:pk>', views.admin_view_classes_results, name='admin-view-classes-results'),
-    path('download-students-results/<uuid:classes_id>', views.download_students_results,
-         name='download-students-results'),
+    path('download-students-results/<uuid:classes_id>', views.download_students_results_admin,
+         name='download-students-results-admin'),
 
     path('admin-check-marks/<uuid:pk>', views.admin_check_marks_view, name='admin-check-marks'),
     path('update-student/<uuid:pk>', views.update_student_view, name='update-student'),
