@@ -1,19 +1,23 @@
 import os
 import environ
 from pathlib import Path
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
 
 # environs kutubxonasidan foydalanish
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).resolve().parent.parent
-env = environ.Env()
 
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env.str('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool("DEBUG", default=True)
-
-
+DEBUG = env('DEBUG')
+print(type(DEBUG))
 ALLOWED_HOSTS = ["35.192.50.104", 'localhost', "192.168.152.218"]
 
 # Application definition
