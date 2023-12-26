@@ -4,15 +4,17 @@ from pathlib import Path
 
 # environs kutubxonasidan foydalanish
 BASE_DIR = Path(__file__).resolve().parent.parent
+env = environ.Env()
 
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG')
-# DEBUG =False
-ALLOWED_HOSTS = ["35.192.50.104", "127.0.0.1"]
+DEBUG = env.bool("DEBUG", default=True)
+
+
+ALLOWED_HOSTS = ["35.192.50.104", 'localhost', "192.168.152.218"]
 
 # Application definition
 
