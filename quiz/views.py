@@ -241,7 +241,7 @@ def admin_add_course_view(request):
         if courseForm.is_valid():
             courseForm.save()
         else:
-            print("form is invalid")
+            return render(request, 'quiz/admin_add_course.html', {'courseForm': courseForm})
         return HttpResponseRedirect('/admin-view-course')
     return render(request, 'quiz/admin_add_course.html', {'courseForm': courseForm})
 
@@ -264,13 +264,13 @@ def delete_course_view(request, pk):
 @login_required(login_url='adminlogin')
 @user_passes_test(is_staff_user)
 def admin_add_classes_view(request):
-    classesForm = forms.ClassesForm
+    classesForm = forms.ClassesForm()
     if request.method == 'POST':
         classesForm = forms.ClassesForm(request.POST)
         if classesForm.is_valid():
             classesForm.save()
         else:
-            print("form is invalid")
+            return render(request, 'quiz/admin_add_class.html', {'classesForm': classesForm})
         return HttpResponseRedirect('/admin-view-classes')
     return render(request, 'quiz/admin_add_class.html', {'classesForm': classesForm})
 

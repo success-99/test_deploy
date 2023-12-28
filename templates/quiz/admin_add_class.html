@@ -23,6 +23,15 @@
     
 
     <button type="submit" class="btn btn-primary">Qo'shish</button>
+
+    <br>
+{% if classesForm.errors %}
+<br>
+    <div class="alert alert-danger">
+
+        {{ classesForm.errors }}
+    </div>
+{% endif %}
   </form>
 <br><br><br><br><br><br><br><br><br><br><br><br><br>
 {% endblock content %}

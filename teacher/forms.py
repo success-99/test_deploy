@@ -63,24 +63,24 @@ class TeacherUserForm(forms.ModelForm):
 
 
 class TeacherForm(forms.ModelForm):
-    course = forms.ModelChoiceField(queryset=Course.objects.all().filter(status=True), empty_label="Fan nomi",
+    course = forms.ModelChoiceField(queryset=Course.objects.all(), empty_label="Fan nomi",
                                     to_field_name="id")
 
     class Meta:
         model = models.Teacher
         fields = ['mobile']
 
-        def clean_mobile(self):
-            mobile = self.cleaned_data['mobile']
-            if models.Teacher.objects.filter(mobile__iexact=mobile).exists():
-                self.add_error("mobile", _("Bunday telefon raqam egasi mavjud! Raqamingizni o'zgartiring!"))
-            if not mobile:
-                raise forms.ValidationError("Telefon raqamingizni kiriting!")
-            if len(mobile) < 9 or len(mobile) > 13:
-                raise forms.ValidationError("Telefon raqamingiz 9 ta va 13ta raqam oralig'ida bo'lishi kerak!")
-            if not mobile.isdigit():
-                raise forms.ValidationError("Telefon raqam faqat sonlardan iborat bo'lishi kerak!")
-            return mobile
+    def clean_mobile(self):
+        mobile = self.cleaned_data['mobile']
+        if models.Teacher.objects.filter(mobile__iexact=mobile).exists():
+            self.add_error("mobile", _("Bunday telefon raqam egasi mavjud! Raqamingizni o'zgartiring!"))
+        if not mobile:
+            raise forms.ValidationError("Telefon raqamingizni kiriting!")
+        if len(mobile) < 9 or len(mobile) > 13:
+            raise forms.ValidationError("Telefon raqamingiz 9 ta va 13ta raqam oralig'ida bo'lishi kerak!")
+        if not mobile.isdigit():
+            raise forms.ValidationError("Telefon raqam faqat sonlardan iborat bo'lishi kerak!")
+        return mobile
 
 
 class TeacherUForm(forms.ModelForm):

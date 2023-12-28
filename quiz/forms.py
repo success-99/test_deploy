@@ -23,8 +23,10 @@ class ClassesForm(forms.ModelForm):
 
     def clean_class_name(self):
         class_name = self.cleaned_data['class_name']
+        # if models.Classes.objects.filter(class_name__iexact=class_name).exists():
+        #     self.add_error("class_name", _("Bunday sinf mavjud! Sinf nomini o'zgartiring!"))
         if models.Classes.objects.filter(class_name__iexact=class_name).exists():
-            self.add_error("class_name", _("Bunday sinf mavjud! Sinf nomini o'zgartiring!"))
+            raise forms.ValidationError(_("Bunday sinf mavjud! Sinf nomini o'zgartiring!"), code='invalid')
         if not class_name:
             raise forms.ValidationError("Sinf nomini kiriting!")
         if len(class_name) < 3 or len(class_name) > 20:
@@ -38,6 +40,11 @@ class CourseForm(forms.ModelForm):
     class Meta:
         model = models.Course
         fields = ['course_name', 'question_number', 'total_marks']
+
+    def clean_course_name(self):
+        course_name = self.cleaned_data['course_name']
+        if models.Course.objects.filter(course_name__iexact=course_name).exists():
+            self.add_error("course_name", _("Bunday fan mavjud! Fan nomini o'zgartiring!"))
 
 
 class QuestionForm(forms.ModelForm):

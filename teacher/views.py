@@ -91,7 +91,7 @@ def teacher_add_exam_view(request):
         if courseForm.is_valid():
             courseForm.save()
         else:
-            print("form is invalid")
+            return render(request, 'teacher/teacher_add_exam.html', {'courseForm': courseForm})
         return HttpResponseRedirect('/teacher/teacher-view-exam')
     return render(request, 'teacher/teacher_add_exam.html', {'courseForm': courseForm})
 
