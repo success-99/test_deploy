@@ -8,17 +8,13 @@ env = environ.Env(
     DEBUG=(bool, False)
 )
 
-# environs kutubxonasidan foydalanish
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 SECRET_KEY = env.str('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
+DEBUG = env.bool('DEBUG')
 
 ALLOWED_HOSTS = ["34.125.178.209", "127.0.0.1", "*"]
 
