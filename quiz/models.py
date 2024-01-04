@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
 import uuid
@@ -67,3 +68,12 @@ class RandomQuestionMarks(BaseModel):
 
     def __str__(self):
         return str(self.course)
+
+
+class CourseClassTime(BaseModel):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    classes = models.ForeignKey(Classes, on_delete=models.CASCADE)
+    times = models.IntegerField(
+        default=0,
+        validators=[MinValueValidator(1), MaxValueValidator(200)]
+    )

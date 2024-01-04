@@ -1,6 +1,8 @@
 import os
 import environ
 from pathlib import Path
+from datetime import timedelta
+
 env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False)
@@ -35,7 +37,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'ckeditor',
     'ckeditor_uploader',
-    'debug_toolbar',
+    # 'debug_toolbar',
 
     # 'quiz',
     'teacher',
@@ -56,7 +58,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'django_auto_logout.middleware.auto_logout',
 
 ]
 ROOT_URLCONF = 'onlinequiz.urls'
@@ -210,8 +213,9 @@ CKEDITOR_CONFIGS = {
         ]),
     }
 }
+
 CKEDITOR_ALLOW_NONIMAGE_FILES = False
 
-INTERNAL_IPS = [
-    '127.0.0.1'
-]
+AUTO_LOGOUT = {
+    'SESSION_TIME': timedelta(hours=2),
+}

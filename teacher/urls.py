@@ -16,7 +16,7 @@ urlpatterns = [
     path('teacher-student-result-view/<uuid:result_id>', views.teacher_student_result_view,
          name='teacher-student-result'),
 
-    path('teacher-add-exam', views.teacher_add_exam_view, name='teacher-add-exam'),
+    # path('teacher-add-exam', views.teacher_add_exam_view, name='teacher-add-exam'),
     path('teacher-view-exam', views.teacher_view_exam_view, name='teacher-view-exam'),
     path('delete-exam/<uuid:pk>', views.delete_exam_view, name='delete-exam'),
 
@@ -35,5 +35,9 @@ urlpatterns = [
 
     path('teacher-view-question-number', views.teacher_view_question_random, name='teacher-view-question-random'),
     path('teacher-add-random-number/<uuid:class_id>', views.teacher_random_question_marks, name='teacher-random-question-marks'),
+
+    path('teacher-view-question-classes-time', views.teacher_view_question_times, name='teacher-view-question-classes-time'),
+    path('teacher-view-question-add-time/<uuid:class_id>', views.teacher_question_add_times,
+         name='teacher-view-question-add-time'),
 
 ]

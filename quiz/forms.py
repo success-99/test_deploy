@@ -101,3 +101,15 @@ class RandomQuestionMarksForm(forms.ModelForm):
     class Meta:
         model = models.RandomQuestionMarks
         fields = ['marks']
+
+
+class CourseClassTimeForm(forms.ModelForm):
+    class Meta:
+        model = models.CourseClassTime
+        fields = ['times']
+
+    def clean_times(self):
+        times = self.cleaned_data['times']
+        if times < 1 or times > 200:
+            raise forms.ValidationError("XATOLIK: Vaqt 1 min va 200 min  oralig'ida bo'lishi kerak!")
+        return times

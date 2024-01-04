@@ -44,7 +44,13 @@
 
 
     <button type="submit" class="btn btn-primary">Qo'shish</button>
-
+<br>
+{% if questionForm.errors %}
+    <br>
+    <div class="alert alert-danger">
+       <strong>Xatolik:</strong> {{ questionForm.non_field_errors }}
+    </div>
+{% endif %}
   </form>
 <br><br><br>
 {% endblock content %}

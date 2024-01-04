@@ -27,7 +27,6 @@ schema_view = get_schema_view(
     permission_classes=[permissions.AllowAny, ],
 )
 urlpatterns = [
-
     path('admin-super_admin/', admin.site.urls),
     path('swagger<format>.json|.yaml', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('doc/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
@@ -40,10 +39,11 @@ urlpatterns = [
     path('student/', include('student.urls')),
 
     path('', views.home_view, name=''),
-    path('__debug__/', include('debug_toolbar.urls')),
+    # path('__debug__/', include('debug_toolbar.urls')),
     path('logout', LogoutView.as_view(template_name='quiz/logout.html'), name='logout'),
     path('clear-cookies', views.clear_all_cookies, name='clear_cookies'),
-    # Cookielardagi barcha ma'lumotlarni o'chirish
+    path('out-clear-cookie', views.clear_cookies, name='clear-cookie'),
+
 
     path('aboutus', views.aboutus_view),
     path('contactus', views.contactus_view),

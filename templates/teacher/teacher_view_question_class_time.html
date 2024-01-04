@@ -1,0 +1,55 @@
+{% extends 'teacher/teacherbase.html' %}
+{% block content %}
+{%load static%}
+
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    h6 {
+      text-align: center;
+    }
+
+    .row {
+      margin: 100px;
+    }
+  </style>
+</head>
+<br><br>
+<div class="container">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <a class="btn btn-primary btn-xs" href="{% url 'student-exam' %}"><span class="glyphicon glyphicon-circle-arrow-left"></span> Ortga qaytish</a>
+      <h6 class="panel-title">O'quvchilar uchun imtihon vaqtini belgilash</h6>
+    </div>
+    <table class="table table-hover" id="dev-table">
+      <thead>
+        <tr>
+          <th>Sinf raqami</th>
+          <th>Imtihon nomi</th>
+          <th>Sinflar uchun imtihon vaqtini belgilash</th>
+
+        </tr>
+      </thead>
+      {% for cl in classes %}
+      {% for c in courses %}
+      <tr>
+        <td>{{cl.class_name}}</td>
+        <td> {{c.course_name}}</td>
+        <td><a class="btn btn-primary btn-xs" href="{% url 'teacher-view-question-add-time' cl.id %}"><span class="glyphicon glyphicon-circle-arrow-right"></span></a></td>
+
+      </tr>
+      {% endfor %}
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+<br><br><br><br><br><br>
+{% endblock content %}

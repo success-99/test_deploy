@@ -7,6 +7,18 @@
 
 
   <style media="screen">
+
+    .countdown-container {
+      text-align: right;
+      margin-top: 20px;
+    }
+
+    .countdown {
+      font-size: 36px;
+      font-weight: bold;
+      color: #333;
+    }
+
     a:link {
       text-decoration: none;
     }
@@ -32,22 +44,24 @@
 
 </head>
 
-
-
-
 <body>
-
-
-
   <!--content start-->
   <div class="content">
 
 <div class="jumbotron my-4">
- <a class="btn btn-primary btn-xs custom-margin-left" href="#" id="back-button">
-        <span class="glyphicon glyphicon-circle-arrow-left"></span> Ortga qaytish
- </a>
+
+  <a class="btn btn-primary btn-xs" href="/student/student-exam"><span class="glyphicon glyphicon-circle-arrow-left"></span> Ortga qaytish</a>
+
+<div class="countdown-container">
+  <div id="countdown" class="countdown"></div>
+</div>
+
+<!--<script src="{% static 'js/exam.js' %}"></script>-->
+
+
 <form class="form" autocomplete="off" onsubmit="return saveAns()" action="{% url 'calculate-marks' %}" method="POST">
   {% csrf_token %}
+
   <h2 style="text-align: center;">{{ course.course_name }}</h2>
 <hr style="height: 2px; border-width: 0; color: gray; background-color: gray">
   {% for q in questions %}
@@ -88,7 +102,43 @@
 </form>
 </div>
 <script>
- function saveAns() {
+  var timeLeft = {{ course_time.times }} * 60; // Daqiqalarni sekundlarga aylantirish
+  var countdown = document.getElementById('countdown');
+  var timer = setInterval(function () {
+    var minutes = Math.floor(timeLeft / 60); // Daqiqa hisoblanishi
+    var seconds = timeLeft % 60; // Sekundlar hisoblanishi
+
+    var timeString = (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+    countdown.innerHTML = timeString;
+
+    timeLeft -= 1;
+
+    if (timeLeft < 0) {
+      clearInterval(timer);
+      countdown.innerHTML = 'Vaqt tugadi!';
+
+      // Foydalanuvchi javoblarni cookie ga saqlash
+      var userAnswers = {};
+        var ele = document.querySelectorAll('input[type="radio"]');
+        for (i = 0; i < ele.length; i++) {
+          if (ele[i].type === "radio" && ele[i].checked) {
+            var questionId = ele[i].getAttribute("data-question-id");
+            var selectedAnswer = ele[i].value;
+            setCookie(questionId, selectedAnswer, 3);
+
+            // userAnswers[questionId] = selectedAnswer;
+          }
+        }
+
+        // Cookie ga javoblarni yozish
+        //document.cookie = "userAnswers=" + JSON.stringify(userAnswers) + ";expires=" + new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toUTCString() + ";path=/";
+
+        var form = document.querySelector('.form');
+        form.submit();
+      }
+    }, 1000);
+
+  function saveAns() {
     var ele = document.querySelectorAll('input[type="radio"]');
     for (i = 0; i < ele.length; i++) {
         if (ele[i].type === "radio" && ele[i].checked) {
@@ -107,14 +157,10 @@
   }
 
   document.getElementById("back-button").addEventListener("click", function () {
-        window.history.back();
-    });
+    window.history.back();
+  });
+
 </script>
-
-
-
-
-
     {% include "quiz/footer.html" %}
   </div>
   <!--content end-->

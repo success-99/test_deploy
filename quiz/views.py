@@ -54,18 +54,33 @@ def is_staff_user(user):
     return user.is_authenticated and user.is_staff
 
 
-def afterlogin_view(request):
-    if is_student(request.user):
-        return redirect('student/student-dashboard')
+# def afterlogin_view(request):
+#     if is_student(request.user):
+#         return redirect('student/student-dashboard')
+#
+#     elif is_teacher(request.user):
+#         accountapproval = TMODEL.Teacher.objects.all().filter(user_id=request.user.id, status=True)
+#         if accountapproval:
+#             return redirect('teacher/teacher-dashboard')
+#         else:
+#             return render(request, 'teacher/teacher_wait_for_approval.html')
+#     else:
+#         return redirect('admin-dashboard')
 
+
+def afterlogin_view(request):
+    if is_staff_user(request.user):
+        return redirect('admin-dashboard')
+    elif is_student(request.user):
+        return redirect('student/student-dashboard')
     elif is_teacher(request.user):
-        accountapproval = TMODEL.Teacher.objects.all().filter(user_id=request.user.id, status=True)
-        if accountapproval:
+        teacher = TMODEL.Teacher.objects.filter(user_id=request.user.id, status=True).first()
+        if teacher:
             return redirect('teacher/teacher-dashboard')
         else:
             return render(request, 'teacher/teacher_wait_for_approval.html')
     else:
-        return redirect('admin-dashboard')
+        return redirect('/')
 
 
 def adminclick_view(request):
@@ -297,12 +312,14 @@ def admin_update_class_view(request, pk):
 
     return render(request, 'quiz/admin_class_update.html', {'form': form, 'classes': classes})
 
+
 @login_required(login_url='adminlogin')
 @user_passes_test(is_staff_user)
 def delete_class_view(request, pk):
     cl = models.Classes.objects.get(id=pk)
     cl.delete()
     return HttpResponseRedirect('/admin-view-classes')
+
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_staff_user)
@@ -452,6 +469,22 @@ def clear_all_cookies(request):
 
     # Barcha cookielarni o'chirish
     response = redirect("/logout")  # Buni o'zingizga mos xabar qo'ying
+    for key in request.COOKIES:
+        # Bo'sh joylarni o'chirish
+        if key.strip():  # Bo'sh joylarni tekshirish
+            response.delete_cookie(key)
+
+    # Logout qilish
+    logout(request)
+
+    return response
+
+def clear_cookies(request):
+    # Foydalanuvchi (user) session ma'lumotlarini tozalash
+    request.session.flush()
+
+    # Barcha cookielarni o'chirish
+    response = redirect("/")  # Buni o'zingizga mos xabar qo'ying
     for key in request.COOKIES:
         # Bo'sh joylarni o'chirish
         if key.strip():  # Bo'sh joylarni tekshirish

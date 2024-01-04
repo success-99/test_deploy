@@ -1,0 +1,69 @@
+{% extends 'teacher/teacherbase.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  <style>
+  a:link {
+        text-decoration: none;
+      }
+      .form-container {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Bu qator orqali tugma ko'rinishini o'zgartirishingiz mumkin */
+    .submit-button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .submit-button:hover {
+        background-color: #0056b3;
+    }
+    ul {
+  list-style: none;
+  color: red;
+}
+
+  </style>
+
+</head>
+<h2 style="text-align:center;">Fanni tahrirlash: {{ classes.class_name }} || Savollar umumiy soni: {{ que_c }}</h2>
+<h4 style="text-align:center;">O'quvchilar imtihoni uchun savol soniga etibor bergan holda vaqtni kiriting !!!</h4>
+
+
+
+<div class="form-container">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="submit-button">Saqlash</button>
+        {% if messages %}
+<ul class="messages">
+    {% for message in messages %}<br>
+    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+    {% endif %}
+    </form>
+</div>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+
+
+{% endblock content %}

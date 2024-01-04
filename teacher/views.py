@@ -54,7 +54,8 @@ def teacher_signup_view(request):
 def is_teacher(user):
     return user.groups.filter(name='TEACHER').exists()
 
-#def
+
+# def
 @login_required(login_url='teacherlogin')
 @user_passes_test(is_teacher)
 def teacher_dashboard_view(request):
@@ -71,7 +72,6 @@ def teacher_dashboard_view(request):
     return render(request, 'teacher/teacher_dashboard.html', context=dict)
 
 
-
 @login_required(login_url='teacherlogin')
 @user_passes_test(is_teacher)
 def teacher_class_view(request):
@@ -82,18 +82,18 @@ def teacher_class_view(request):
                   {'classes': classes, 'teacher_course': teacher.course.course_name})
 
 
-@login_required(login_url='teacherlogin')
-@user_passes_test(is_teacher)
-def teacher_add_exam_view(request):
-    courseForm = QFORM.CourseForm()
-    if request.method == 'POST':
-        courseForm = QFORM.CourseForm(request.POST)
-        if courseForm.is_valid():
-            courseForm.save()
-        else:
-            return render(request, 'teacher/teacher_add_exam.html', {'courseForm': courseForm})
-        return HttpResponseRedirect('/teacher/teacher-view-exam')
-    return render(request, 'teacher/teacher_add_exam.html', {'courseForm': courseForm})
+# @login_required(login_url='teacherlogin')
+# @user_passes_test(is_teacher)
+# def teacher_add_exam_view(request):
+#     courseForm = QFORM.CourseForm()
+#     if request.method == 'POST':
+#         courseForm = QFORM.CourseForm(request.POST)
+#         if courseForm.is_valid():
+#             courseForm.save()
+#         else:
+#             return render(request, 'teacher/teacher_add_exam.html', {'courseForm': courseForm})
+#         return HttpResponseRedirect('/teacher/teacher-view-exam')
+#     return render(request, 'teacher/teacher_add_exam.html', {'courseForm': courseForm})
 
 
 @login_required(login_url='teacherlogin')
@@ -232,7 +232,7 @@ def teacher_add_question_view(request):
             question.save()
             return HttpResponseRedirect('/teacher/teacher-view-question')
         else:
-            print("Form is invalid")
+            return render(request, 'teacher/teacher_add_question.html', {'questionForm': questionForm})
     return render(request, 'teacher/teacher_add_question.html', {'questionForm': questionForm})
 
 
@@ -307,6 +307,9 @@ def tech_update_course(request):
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/teacher/teacher-dashboard')
+        else:
+            return render(request, 'teacher/tech_update_course.html', {'form': form, 'course': course})
+
     else:
         form = forms.UpdateCourseForm(instance=course)
 
@@ -324,8 +327,8 @@ def update_profile(request):
     teacherForm = forms.TeacherUForm(instance=teacher, initial={'course': initial_course})
     mydict = {'userForm': userForm, 'teacherForm': teacherForm}
     if request.method == 'POST':
-        userForm = forms.TeacherUserForm(request.POST, instance=user)
-        teacherForm = forms.TeacherUForm(request.POST, instance=teacher)
+        userForm = forms.TeacherUserForm(request.POST or None, instance=user)
+        teacherForm = forms.TeacherUForm(request.POST or None, instance=teacher)
         if userForm.is_valid() and teacherForm.is_valid():
             user = userForm.save()
             user.set_password(user.password)
@@ -370,7 +373,6 @@ def teacher_view_question_random(request):
     courses = QMODEL.Course.objects.all().filter(id=course_id)
     classes = QMODEL.Classes.objects.all()
     response = render(request, 'teacher/teacher_view_question_random.html', {'courses': courses, 'classes': classes})
-    response.set_cookie('course_id',course_id)
 
     return response
 
@@ -379,7 +381,8 @@ def teacher_view_question_random(request):
 @user_passes_test(is_teacher)
 def teacher_random_question_marks(request, class_id):
     classes = QMODEL.Classes.objects.get(id=class_id)
-    course_id = request.COOKIES.get('course_id')
+    teacher = Teacher.objects.get(user=request.user)
+    course_id = teacher.course.id
     random_n = QMODEL.RandomQuestionMarks.objects.all().filter(classes=classes, course=course_id).first()
     question_count = QMODEL.Question.objects.filter(course=course_id, classes=classes).count()
     if request.method == 'POST':
@@ -400,7 +403,54 @@ def teacher_random_question_marks(request, class_id):
             else:
                 messages.error(request, "Nato'g'ri son kiritdingiz!!!")
         else:
-            print("Form is invalid")
+            return render(request, 'teacher/teacher_add_question_num.html',
+                          {'form': questionRandomForm, 'classes': classes, 'que_c': question_count})
     else:
         questionRandomForm = QFORM.RandomQuestionMarksForm(instance=random_n)
-    return render(request, 'teacher/teacher_add_question_num.html', {'form': questionRandomForm, 'classes': classes, 'que_c': question_count})
+    return render(request, 'teacher/teacher_add_question_num.html',
+                  {'form': questionRandomForm, 'classes': classes, 'que_c': question_count})
+
+
+@login_required(login_url='teacherlogin')
+@user_passes_test(is_teacher)
+def teacher_view_question_times(request):
+    teacher = Teacher.objects.get(user=request.user)
+    course_id = teacher.course.id
+    courses = QMODEL.Course.objects.all().filter(id=course_id)
+    classes = QMODEL.Classes.objects.all()
+    response = render(request, 'teacher/teacher_view_question_class_time.html', {'courses': courses, 'classes': classes})
+    return response
+
+
+@login_required(login_url='teacherlogin')
+@user_passes_test(is_teacher)
+def teacher_question_add_times(request, class_id):
+    classes = QMODEL.Classes.objects.get(id=class_id)
+    teacher = Teacher.objects.get(user=request.user)
+    course_id = teacher.course.id
+    times_n = QMODEL.CourseClassTime.objects.all().filter(classes=classes, course=course_id).first()
+    question_count = QMODEL.Question.objects.filter(course=course_id, classes=classes).count()
+    if request.method == 'POST':
+        timeForm = QFORM.CourseClassTimeForm(request.POST, instance=times_n)
+        if timeForm.is_valid():
+            question_time = timeForm.save(commit=False)
+            teacher = Teacher.objects.get(user=request.user)
+            course_id = str(teacher.course.id)
+            course = QMODEL.Course.objects.get(id=course_id)
+            classes = QMODEL.Classes.objects.get(id=class_id)
+            times = question_time.times
+            question_count = QMODEL.Question.objects.filter(course=course, classes=classes).count()
+            if int(times) >= 1:
+                question_time.course = course
+                question_time.classes = classes
+                question_time.save()
+                return HttpResponseRedirect('/teacher/teacher-view-question-classes-time')
+            else:
+                messages.error(request, "Nato'g'ri son kiritdingiz!!!")
+        else:
+            return render(request, 'teacher/teacher_view_question_times.html',
+                          {'form': timeForm, 'classes': classes, 'que_c': question_count})
+    else:
+        timeForm = QFORM.CourseClassTimeForm(instance=times_n)
+    return render(request, 'teacher/teacher_view_question_times.html',
+                  {'form': timeForm, 'classes': classes, 'que_c': question_count})

@@ -95,24 +95,18 @@ def start_exam_view(request, pk):
     classes_id = student.classes.id
     course = QMODEL.Course.objects.get(id=pk)
     questions = list(QMODEL.Question.objects.filter(course=course, classes=classes_id))
+    course_time = QMODEL.CourseClassTime.objects.filter(course=course, classes=classes_id).first()
 
-    # Savollarni random rqali o'quvchilarga jo'natish
+    # Savollarni random orqali o'quvchilarga jo'natish
     random_num = QMODEL.RandomQuestionMarks.objects.filter(course=course, classes=classes_id).first()
+    if int(course_time.times) < 1:
+        return render(request, 'student/none.html')
+
     if random_num is None:
         return render(request, 'student/none.html')
     num = random_num.marks
     random_questions = random.sample(questions, num)
 
-    # random orqali tushadigan savollarni
-    # unique_marks = QMODEL.Question.objects.filter(course=course, classes=classes_id).values_list('marks', flat=True).distinct()
-    # random_q = list(unique_marks)
-    # question_counts = {}
-    # for mark in random_q:
-    #     count = QMODEL.Question.objects.filter(course=course, classes=classes_id, marks=mark).count()
-    #     question_counts[mark] = count
-    #
-    # for mark, count in question_counts.items():
-    #     print(f"Questions with {mark} marks: {count} questions")
 
     # random orqali tushgan savollarning umumiy balli
     y = 0
@@ -126,7 +120,7 @@ def start_exam_view(request, pk):
 
     # cookieni ortiqcha malumotlardan tozalash
     if 'clear_cookies' in request.GET and request.GET['clear_cookies'] == '1':
-        response = render(request, 'student/start_exam.html', {'course': course, 'questions': random_questions})
+        response = render(request, 'student/start_exam.html', {'course': course, 'questions': random_questions, 'course_time':course_time})
         response.set_cookie('u_marks', y)
         all_cookies = request.COOKIES
         for cookie_name in all_cookies:

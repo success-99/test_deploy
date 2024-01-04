@@ -11,7 +11,7 @@ class TeacherUserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'username', 'password', 'email']
+        fields = ['first_name', 'last_name', 'username', 'email', 'password']
         widgets = {
             'password': forms.PasswordInput()
         }
