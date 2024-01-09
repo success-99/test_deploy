@@ -2,7 +2,7 @@ let timer;
 
 function resetTimer() {
   clearTimeout(timer);
-  timer = setTimeout(logoutUser, 10000); // 30 sekunddan so'ng avtomatik ravishda logout
+  timer = setTimeout(logoutUser, 3600000); // 30 sekunddan so'ng avtomatik ravishda logout
 }
 
 function logoutUser() {

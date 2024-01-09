@@ -2,6 +2,8 @@ import os
 import environ
 from pathlib import Path
 from datetime import timedelta
+import dj_database_url
+from decouple import config
 
 env = environ.Env(
     # set casting, default value
@@ -16,8 +18,7 @@ SECRET_KEY = env.str('SECRET_KEY')
 
 DEBUG = env.bool('DEBUG')
 
-ALLOWED_HOSTS = ["34.125.178.209", "127.0.0.1", "*"]
-
+ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app']
 # Application definition
 
 INSTALLED_APPS = [
@@ -94,7 +95,7 @@ SWAGGER_SETTINGS = {
     }
 }
 
-WSGI_APPLICATION = 'onlinequiz.wsgi.application'
+WSGI_APPLICATION = 'onlinequiz.wsgi.app'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -102,14 +103,16 @@ WSGI_APPLICATION = 'onlinequiz.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME'),
-        'HOST': os.environ.get('DB_HOST'),
+        'NAME': os.environ.get('POSTGRES_DATABASE'),
+        'HOST': os.environ.get('POSTGRES_HOST'),
         'PORT': '5432',
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD')
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD')
 
     }
 }
+
+# DATABASES['default'] = dj_database_url.config()
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -149,9 +152,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static-files')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-
+STATIC_ROOT = BASE_DIR / "staticfiles_build" / "static"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 LOGIN_REDIRECT_URL = '/afterlogin'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

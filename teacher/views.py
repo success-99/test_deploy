@@ -179,7 +179,7 @@ def download_student_results_teacher(request):
 
     with open(filename, 'rb') as excel_file:
         response = HttpResponse(excel_file.read(),
-                                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                                content_type='app/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = f'attachment; filename={smart_str(filename)}'
     if os.path.exists(filename):
         os.remove(filename)
