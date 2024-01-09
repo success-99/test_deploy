@@ -100,19 +100,23 @@ WSGI_APPLICATION = 'onlinequiz.wsgi.app'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.environ.get('POSTGRES_DATABASE'),
+#         'HOST': os.environ.get('POSTGRES_HOST'),
+#         'PORT': '5432',
+#         'USER': os.environ.get('POSTGRES_USER'),
+#         'PASSWORD': os.environ.get('POSTGRES_PASSWORD')
+#
+#     }
+# }
+
+
+DATABASE_URL = env.str("DATABASE_URL")
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_DATABASE'),
-        'HOST': os.environ.get('POSTGRES_HOST'),
-        'PORT': '5432',
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD')
-
+        'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=1800)
     }
-}
-
-# DATABASES['default'] = dj_database_url.config()
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
