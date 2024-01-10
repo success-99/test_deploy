@@ -99,9 +99,6 @@ WSGI_APPLICATION = 'onlinequiz.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-
-
-
 DATABASE_URL = env.str("DATABASE_URL")
 DATABASES = {
         'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=1800)
