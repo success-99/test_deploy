@@ -19,22 +19,22 @@
       {% render_field questionForm.classes|attr:'required:true' class="form-control"  %}
         <br>
 
-      <label for="question">Savol</label>
-      {% render_field questionForm.question|attr:'required:true' class="form-control" placeholder="What is the currency of Uzbekistan ?" %}
+      <label for="question">Savol kiritish uchun:</label><br>
+      {% render_field questionForm.question|attr:'required:true' class="form-control" %}
         <br><br>
       <label for="question_number">Savol uchun ball</label>
       {% render_field questionForm.marks|attr:'required:true' class="form-control" placeholder="10" %}
         <br>
-      <label for="variant_A">Variant A</label>
+      <label for="variant_A">Variant A</label><br>
       {% render_field questionForm.variant_A|attr:'required:true' class="form-control" placeholder="Rupees" %}
         <br><br>
-      <label for="variant_B">Variant B</label>
+      <label for="variant_B">Variant B</label><br>
       {% render_field questionForm.variant_B|attr:'required:true' class="form-control" placeholder="Dollar" %}
         <br><br>
-      <label for="variant_C">Variant C</label>
+      <label for="variant_C">Variant C</label><br>
       {% render_field questionForm.variant_C|attr:'required:true' class="form-control" placeholder="Sum" %}
         <br><br>
-      <label for="variant_D">Variant D</label>
+      <label for="variant_D">Variant D</label><br>
       {% render_field questionForm.variant_D|attr:'required:true' class="form-control" placeholder="Euro" %}
         <br><br>
       <label for="answer">To'g'ri javobni tanlang</label>

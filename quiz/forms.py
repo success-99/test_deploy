@@ -42,9 +42,11 @@ class CourseForm(forms.ModelForm):
         fields = ['course_name', 'question_number', 'total_marks']
 
     def clean_course_name(self):
-        course_name = self.cleaned_data['course_name']
-        if models.Course.objects.filter(course_name__iexact=course_name).exists():
-            self.add_error("course_name", _("Bunday fan mavjud! Fan nomini o'zgartiring!"))
+        course_name = self.cleaned_data.get('course_name')  # .get() is used to handle None if 'course_name' is not in cleaned_data
+        if course_name:
+            if models.Course.objects.filter(course_name__iexact=course_name).exists():
+                raise forms.ValidationError(_("Bunday fan mavjud! Fan nomini o'zgartiring!"), code='invalid')
+        return course_name
 
 
 class QuestionForm(forms.ModelForm):
